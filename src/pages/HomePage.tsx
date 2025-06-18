@@ -112,7 +112,7 @@ const HomePage = () => {
               >
                 <div className="rounded-lg overflow-hidden">
                   <img 
-                    src="https://images.pexels.com/photos/6646947/pexels-photo-6646947.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" 
+                    src="https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172731/10_nmptp7" 
                     alt="Founder" 
                     className="w-full h-auto object-cover" 
                   />

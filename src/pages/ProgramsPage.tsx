@@ -56,7 +56,7 @@ const ProgramsPage = () => {
                 title="✂️ Stitching Dreams, Empowering Lives"
                 description="Between 2007 and 2014, our tailoring and garment-making training program transformed the lives of over 1,200 rural women, equipping them with more than just stitching skills — we helped them craft a future of economic independence."
                 icon={<Users size={28} />}
-                image="https://images.pexels.com/photos/4262010/pexels-photo-4262010.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                image="https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172731/9_u3swz9"
                 stats={[
                   { label: "Women Trained", value: "1,200+" },
                   { label: "Success Rate", value: "85%" },
@@ -85,7 +85,7 @@ With every sapling, we planted a lesson in sustainability and a legacy of green 
                 title="Career Guidance Program"
                 description="Specialized career counseling for people with disabilities and underprivileged students to help them identify suitable career paths"
                 icon={<GraduationCap size={28} />}
-                image="https://images.pexels.com/photos/6238297/pexels-photo-6238297.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                image="https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172731/5_hzo519"
                 stats={[
                   { label: "Students Guided", value: "600+" },
                   { label: "Duration", value: "2014-2024" },
@@ -99,7 +99,7 @@ With every sapling, we planted a lesson in sustainability and a legacy of green 
                 title="Bicycle Assembly Training"
                 description="Technical training in bicycle assembly and maintenance in partnership with TI Cycles, providing practical vocational skills"
                 icon={<Bike size={28} />}
-                image="https://images.pexels.com/photos/5210526/pexels-photo-5210526.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                image="https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172731/7_edua0c"
                 stats={[
                   { label: "People Trained", value: "25+" },
                   { label: "Women Participants", value: "10" },
@@ -114,7 +114,7 @@ With every sapling, we planted a lesson in sustainability and a legacy of green 
                 description="IIn 2013, we filed a Public Interest Litigation (PIL) in the Chennai High Court, advocating for the rights of differently-abled individuals.
 The resulting landmark judgement secured Group 4 government jobs for 636 deserving candidates, championing inclusion and justice."
                 icon={<BookOpen size={28} />}
-                image="https://images.pexels.com/photos/3760810/pexels-photo-3760810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                image="https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172731/2_sqzyqv"
                 stats={[
                   { label: "Jobs Provided", value: "636" },
                   { label: "Target for 2025", value: "1000+" },
@@ -129,7 +129,7 @@ The resulting landmark judgement secured Group 4 government jobs for 636 deservi
                 description="In 2014, 250 students stepped into the digital age with computer training and MSME entrepreneurship skills.
 We didn’t just teach technology — we sparked innovation and built tomorrow’s changemakers. 🚀"
                 icon={<Monitor size={28} />}
-                image="https://images.pexels.com/photos/6238118/pexels-photo-6238118.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                image="https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172731/1_pkjh49"
                 stats={[
                   { label: "People Trained", value: "250+" },
                   { label: "Course Duration", value: "3 Months" },
