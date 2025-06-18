@@ -1,0 +1,38 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "we-can-trust",
+  "main": "app.js",
+  "scripts": {
+    "test": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Champath/We-can-Trust.git"
+  },
+  "keywords": [
+    "NGO"
+  ],
+  "author": "Yuvan-1166",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Champath/We-can-Trust/issues"
+  },
+  "homepage": "https://github.com/Champath/We-can-Trust#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "connect-flash": "^0.1.1",
+    "dotenv": "^16.5.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.18.1",
+    "mongoose": "^8.14.3",
+    "nodemailer": "^7.0.3",
+    "nodemon": "^3.1.10",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-local": "^1.0.0",
+    "razorpay": "^2.9.6"
+  }
+}
