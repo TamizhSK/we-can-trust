@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { CreditCard, Heart, DollarSign, Users, GraduationCap, Lightbulb } from 'lucide-react';
+import { CreditCard, Heart, Users, GraduationCap, Lightbulb } from 'lucide-react';
 import Button from '../components/Button';
 import Card from '../components/Card';
 

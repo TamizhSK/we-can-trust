@@ -1,12 +1,10 @@
 import { motion } from 'framer-motion';
 import { 
   Users, 
-  Leaf, 
   GraduationCap, 
   Bike, 
   BookOpen, 
   Monitor,
-  BarChart4,
   Lightbulb,
   Scale,
   TreePine,
