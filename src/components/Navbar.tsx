@@ -25,12 +25,30 @@ const Navbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const navLinkClass = ({ isActive }: { isActive: boolean }) => 
-    `px-4 py-2 rounded-md transition-colors duration-200 ${
-      isActive 
-        ? 'text-primary-600 font-medium' 
-        : 'text-gray-700 hover:text-primary-500'
+  interface NavLinkClassProps {
+    isActive: boolean;
+  }
+
+  type NavLinkClassFn = (props: NavLinkClassProps) => string;
+
+  const navLinkClass = (isScrolled: boolean, isMobile: boolean = false): NavLinkClassFn => ({ isActive }: NavLinkClassProps): string => {
+    const baseClasses = "px-4 py-2 rounded-md transition-colors duration-200";
+    const mobileClasses = isMobile ? "block w-full text-left" : "";
+    
+    if (isActive) {
+      return `${baseClasses} ${mobileClasses} ${
+        isScrolled || isMobile
+          ? 'text-primary-600 font-semibold bg-primary-50'
+          : 'text-white font-semibold bg-white/10'
+      }`;
+    }
+    
+    return `${baseClasses} ${mobileClasses} ${
+      isScrolled || isMobile
+        ? 'text-gray-700 hover:text-primary-500 hover:bg-primary-50'
+        : 'text-gray-100 hover:text-white hover:bg-white/10'
     }`;
+  };
 
   return (
     <header 
@@ -41,47 +59,97 @@ const Navbar = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <NavLink to="/" className="flex items-center space-x-2">
-            <img src="/logo.svg" alt="We Can Trust You Logo" className="h-10 w-10" />
-            <span className="text-xl font-display font-semibold text-primary-600">
-              We Can Trust You
+            <div className={`h-10 w-10 rounded-md flex items-center justify-center ${
+              isScrolled ? 'bg-primary-100' : 'bg-white/20'
+            }`}>
+              <span className={`text-xl font-bold ${
+                isScrolled ? 'text-primary-600' : 'text-white'
+              }`}>
+                😊
+              </span>
+            </div>
+            <span className={`text-xl font-display font-semibold transition-colors duration-200 ${
+              isScrolled ? 'text-primary-600' : 'text-white'
+            }`}>
+              We Can Trust
             </span>
           </NavLink>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-1">
-            <NavLink to="/" className={navLinkClass}>Home</NavLink>
-            <NavLink to="/about" className={navLinkClass}>About</NavLink>
-            <NavLink to="/programs" className={navLinkClass}>Programs</NavLink>
-            <NavLink to="/contact" className={navLinkClass}>Contact</NavLink>
+          <nav className="hidden md:flex items-center space-x-1">
+            <NavLink to="/" className={navLinkClass(isScrolled)}>
+              Home
+            </NavLink>
+            <NavLink to="/about" className={navLinkClass(isScrolled)}>
+              About
+            </NavLink>
+            <NavLink to="/programs" className={navLinkClass(isScrolled)}>
+              Programs
+            </NavLink>
+            <NavLink to="/contact" className={navLinkClass(isScrolled)}>
+              Contact
+            </NavLink>
             <NavLink 
               to="/donate" 
-              className="ml-2 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-md transition-colors duration-200 font-medium"
+              className="ml-4 px-6 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-md transition-all duration-200 font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
             >
               Donate
             </NavLink>
           </nav>
-
-          {/* Mobile Menu Button */}
-          <button className="md:hidden" onClick={toggleMenu}>
+          <button 
+            className={`md:hidden p-2 rounded-md transition-colors duration-200 ${
+              isScrolled 
+                ? 'text-gray-700 hover:bg-gray-100' 
+                : 'text-white hover:bg-white/10'
+            }`}
+            onClick={toggleMenu}
+            aria-label="Toggle menu"
+          >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
 
-        {/* Mobile Navigation */}
         {isMenuOpen && (
-          <nav className="md:hidden pt-4 pb-2 flex flex-col bg-white">
-            <NavLink to="/" className={navLinkClass} onClick={toggleMenu}>Home</NavLink>
-            <NavLink to="/about" className={navLinkClass} onClick={toggleMenu}>About</NavLink>
-            <NavLink to="/programs" className={navLinkClass} onClick={toggleMenu}>Programs</NavLink>
-            <NavLink to="/contact" className={navLinkClass} onClick={toggleMenu}>Contact</NavLink>
-            <NavLink 
-              to="/donate" 
-              className="mt-2 mx-4 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-md transition-colors duration-200 font-medium text-center"
-              onClick={toggleMenu}
-            >
-              Donate
-            </NavLink>
-          </nav>
+          <div className="md:hidden">
+            <nav className="mt-4 pt-4 pb-4 px-2 bg-white rounded-lg shadow-lg border border-gray-100 space-y-1">
+              <NavLink 
+                to="/" 
+                className={navLinkClass(true, true)} 
+                onClick={toggleMenu}
+              >
+                Home
+              </NavLink>
+              <NavLink 
+                to="/about" 
+                className={navLinkClass(true, true)} 
+                onClick={toggleMenu}
+              >
+                About
+              </NavLink>
+              <NavLink 
+                to="/programs" 
+                className={navLinkClass(true, true)} 
+                onClick={toggleMenu}
+              >
+                Programs
+              </NavLink>
+              <NavLink 
+                to="/contact" 
+                className={navLinkClass(true, true)} 
+                onClick={toggleMenu}
+              >
+                Contact
+              </NavLink>
+              <div className="pt-2 mt-2 border-t border-gray-200">
+                <NavLink 
+                  to="/donate" 
+                  className="block w-full px-4 py-3 bg-primary-500 hover:bg-primary-600 text-white rounded-md transition-colors duration-200 font-semibold text-center shadow-md"
+                  onClick={toggleMenu}
+                >
+                  Donate
+                </NavLink>
+              </div>
+            </nav>
+          </div>
         )}
       </div>
     </header>

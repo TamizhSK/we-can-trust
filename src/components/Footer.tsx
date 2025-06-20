@@ -10,7 +10,7 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">About Us</h3>
             <p className="text-gray-300 text-sm leading-relaxed">
-              We Can Trust You is dedicated to empowering people with disabilities and underprivileged 
+              We Can Trust is dedicated to empowering people with disabilities and underprivileged 
               communities through education, training, and advocacy.
             </p>
             <div className="flex items-center mt-4 text-sm text-gray-300">
@@ -77,7 +77,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center">
                 <Mail size={18} className="text-accent-400 mr-2 flex-shrink-0" />
-                <span>info@wecantrustyou.org</span>
+                <span>info@wecantrust.org</span>
               </li>
             </ul>
           </div>
@@ -85,7 +85,7 @@ const Footer = () => {
         
         <div className="border-t border-gray-700 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-gray-400">
-            &copy; {new Date().getFullYear()} We Can Trust You. All rights reserved.
+            &copy; {new Date().getFullYear()} We Can Trust. All rights reserved.
           </p>
           <div className="mt-4 md:mt-0">
             <a 

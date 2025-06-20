@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, Heart } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Button from './Button';
 
 const Hero = () => {
   return (
-    <div className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 py-20 relative overflow-hidden">
+    <div className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 py-40 relative overflow-hidden">
       {/* Animated background elements */}
       <div className="absolute inset-0">
         <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full animate-pulse"></div>
@@ -46,7 +46,7 @@ const Hero = () => {
             </h1>
             
             <p className="text-xl md:text-2xl text-primary-100 max-w-3xl mx-auto leading-relaxed">
-              We Can Trust You is dedicated to providing training, resources, and advocacy for people with disabilities and the underprivileged.
+              We Can Trust is dedicated to providing training, resources, and advocacy for people with disabilities and the underprivileged.
             </p>
             
             <div className="mt-10 flex flex-wrap justify-center gap-4 mb-8">
@@ -77,7 +77,7 @@ const Hero = () => {
                   variant="outline"
                   className="border-white text-white hover:bg-white/10 focus:ring-white"
                 >
-                  Our Programs <ArrowRight size={16} className="ml-2" />
+                  Our Programs
                 </Button>
               </Link>
             </div>
