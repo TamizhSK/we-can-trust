@@ -87,22 +87,6 @@ const DonatePage = () => {
             </motion.div>
           </div>
         </div>
-        
-        {/* Wave Divider at bottom */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg 
-            viewBox="0 0 1440 120" 
-            fill="none" 
-            xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="none"
-            className="w-full h-auto"
-          >
-            <path 
-              d="M0 120L48 110C96 100 192 80 288 75C384 70 480 80 576 85C672 90 768 90 864 85C960 80 1056 70 1152 65C1248 60 1344 60 1392 60L1440 60V0H0V120Z" 
-              fill="#f9fafb"
-            />
-          </svg>
-        </div>
       </div>
 
       {/* Donation Form */}
