@@ -21,9 +21,37 @@ const DonatePage = () => {
   };
 
   const handleDonate = () => {
-    // Show Stripe dialog here when integrated
-    alert('Redirecting to payment gateway...');
+  if (!amount) return;
+
+  const options = {
+    key: 'rzp_test_x9oniUVmCnoxcV', // Replace with your Razorpay Key ID
+    amount: Number(amount) * 100, // Razorpay takes amount in paisa
+    currency: 'INR',
+    name: 'Your Organization Name',
+    description: `Donation for ${donationType} cause`,
+    image: 'https://your-logo-url.com/logo.png', // Optional
+    handler: function (response: any) {
+      alert(`Payment successful! Payment ID: ${response.razorpay_payment_id}`);
+      // TODO: Send the response to your backend to verify and store
+    },
+    prefill: {
+      name: '', // Optionally add user info here
+      email: '',
+      contact: '',
+    },
+    notes: {
+      cause: donationType,
+      recurring: isRecurring ? 'Yes' : 'No',
+    },
+    theme: {
+      color: '#6C63FF',
+    },
   };
+
+  const rzp = new (window as any).Razorpay(options);
+  rzp.open();
+};
+
 
   return (
     <div className="pt-20 pb-16">
@@ -160,7 +188,7 @@ const DonatePage = () => {
                       {[500, 1000, 2500, 5000].map((value) => (
                         <button
                           key={value}
-                          className={`py-3 rounded-lg border font-medium transition-colors ${
+                          className={`py-3 rounded-lg border font-medium transition-colors {
                             amount === value 
                               ? 'bg-primary-50 border-primary-500 text-primary-700' 
                               : 'border-gray-300 hover:border-primary-300'
@@ -173,9 +201,9 @@ const DonatePage = () => {
                     </div>
                     
                     <div className="relative">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                        <DollarSign size={18} />
-                      </span>
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                        ₹
+                        </span>
                       <input
                         type="text"
                         value={amount === '' ? '' : amount}
@@ -230,7 +258,7 @@ const DonatePage = () => {
                   </Button>
                   
                   <div className="mt-4 text-center text-sm text-gray-500">
-                    Secure payment powered by Stripe
+                    Secure payment powered by RazorPay
                   </div>
                 </Card>
               </div>
