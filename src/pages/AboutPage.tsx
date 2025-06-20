@@ -4,9 +4,9 @@ import Card from '../components/Card';
 
 const AboutPage = () => {
   return (
-    <div className="pt-20 pb-16">
+    <div className="pb-16">
       {/* Creative Header */}
-      <div className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 py-20 relative overflow-hidden">
+      <div className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 py-40 relative overflow-hidden">
         {/* Animated background elements */}
         <div className="absolute inset-0">
           <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full animate-pulse"></div>
