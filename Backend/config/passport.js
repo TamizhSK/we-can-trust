@@ -20,7 +20,7 @@ module.exports = function (passport) {
       async (req, email, password, done) => {
         try {
           if (await User.findOne({ email })) {
-            return done(null, false, req.flash("error", "Email already taken"));
+            return done(null, false, { message: "Email already taken" });
           }
           const hash = await bcrypt.hash(password, 12);
           const newUser = await User.create({
@@ -44,15 +44,15 @@ module.exports = function (passport) {
       async (email, password, done) => {
         try {
           const user = await User.findOne({ email });
-          if (!user) return done(null, false, { message: "No user found" });
+          if (!user) return done(null, false, { message: "No user found with this email" });
           if (!user.password) {
             return done(null, false, {
               message:
-                "User Signed Up with Google, Use Google Authentication to Continue",
+                "User signed up with Google. Please use Google authentication to continue",
             });
           }
           const match = await bcrypt.compare(password, user.password);
-          if (!match) return done(null, false, { message: "Wrong password" });
+          if (!match) return done(null, false, { message: "Invalid password" });
           return done(null, user);
         } catch (err) {
           return done(err);
@@ -67,7 +67,7 @@ module.exports = function (passport) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "/auth/google/callback",
+        callbackURL: "/api/auth/google/callback",
       },
       async (accessToken, refreshToken, profile, done) => {
         const existing = await User.findOne({ googleId: profile.id });
