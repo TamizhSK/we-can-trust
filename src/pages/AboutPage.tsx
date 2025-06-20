@@ -5,23 +5,72 @@ import Card from '../components/Card';
 const AboutPage = () => {
   return (
     <div className="pt-20 pb-16">
-      {/* Header */}
-      <div className="bg-primary-600 py-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
+      {/* Creative Header */}
+      <div className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 py-20 relative overflow-hidden">
+        {/* Animated background elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full animate-pulse"></div>
+          <div className="absolute top-32 right-20 w-16 h-16 bg-accent-400/20 rounded-full animate-bounce"></div>
+          <div className="absolute bottom-20 left-1/4 w-12 h-12 bg-secondary-400/30 rounded-full animate-pulse"></div>
+          <div className="absolute bottom-32 right-1/3 w-24 h-24 bg-white/5 rounded-full animate-bounce"></div>
+        </div>
+        
+        {/* Decorative pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <defs>
+              <pattern id="grid-about" width="10" height="10" patternUnits="userSpaceOnUse">
+                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" strokeWidth="0.5"/>
+              </pattern>
+            </defs>
+            <rect width="100" height="100" fill="url(#grid-about)" />
+          </svg>
+        </div>
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="max-w-4xl mx-auto text-center">
             <motion.div
-              initial={{ opacity: 0, y: -20 }}
+              initial={{ opacity: 0, y: -30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.8 }}
             >
-              <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
-                About Us
+              <div className="flex justify-center mb-6">
+                <div className="flex items-center space-x-4 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3">
+                  <Heart className="text-accent-400" size={24} />
+                  <span className="text-white font-medium">Our Story & Mission</span>
+                  <Heart className="text-accent-400" size={24} />
+                </div>
+              </div>
+              
+              <h1 className="text-5xl md:text-7xl font-display font-bold text-white mb-6 leading-tight">
+                About <span className="text-accent-400">Us</span>
               </h1>
-              <p className="text-xl text-primary-100">
-                Learn about our mission, our founder, and our journey
+              
+              <p className="text-xl md:text-2xl text-primary-100 max-w-3xl mx-auto leading-relaxed">
+                Learn about our mission, our founder's inspiring journey, and our commitment 
+                to empowering people with disabilities and underprivileged communities
               </p>
+              
+              <div className="mt-10 flex flex-wrap justify-center gap-4">
+                <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 text-white">
+                  <span className="font-bold text-accent-400">Since</span> 2007
+                </div>
+                <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 text-white">
+                  <span className="font-bold text-accent-400">1,200+</span> Lives Transformed
+                </div>
+                <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 text-white">
+                  <span className="font-bold text-accent-400">636</span> Jobs Secured
+                </div>
+              </div>
             </motion.div>
           </div>
+        </div>
+        
+        {/* Wave divider */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" className="w-full h-auto">
+            <path d="M0 120L48 110C96 100 192 80 288 75C384 70 480 80 576 85C672 90 768 90 864 85C960 80 1056 70 1152 65C1248 60 1344 60 1392 60L1440 60V0H0V120Z" fill="#F9FAFB"/>
+          </svg>
         </div>
       </div>
       
@@ -130,7 +179,7 @@ const AboutPage = () => {
               >
                 <div className="relative">
                   <img 
-                    src="https://images.pexels.com/photos/8199562/pexels-photo-8199562.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" 
+                    src="https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172731/10_nmptp7" 
                     alt="Founder" 
                     className="rounded-lg shadow-lg w-full"
                   />
@@ -273,7 +322,7 @@ const AboutPage = () => {
               <TeamMember 
                 name="S. Chezhiyan" 
                 role="Founder & Director"
-                image="https://images.pexels.com/photos/8199562/pexels-photo-8199562.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                image="https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172731/10_nmptp7"
               />
               
               <TeamMember 

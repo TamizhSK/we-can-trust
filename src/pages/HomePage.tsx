@@ -34,9 +34,9 @@ const HomePage = () => {
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <ImpactCounter number={1200} title="Women Trained in Tailoring" />
-            <ImpactCounter number={300} title="Trees Planted" />
+            <ImpactCounter number={500} title="Trees Planted" />
             <ImpactCounter number={600} title="Students Guided" duration={2.8} />
-            <ImpactCounter number={200} title="Digital Literacy Trainees" duration={2.6} />
+            <ImpactCounter number={250} title="Digital Literacy Trainees" duration={2.6} />
           </div>
         </div>
       </section>
@@ -55,37 +55,37 @@ const HomePage = () => {
             <ProgramCard 
               icon={<Users size={28} />}
               title="Tailoring Training"
-              description="Comprehensive training in tailoring and garment making, empowering women with skills for economic independence."
+              description="From 2007-2014, comprehensive training in tailoring and garment making empowered 1,200 rural women with skills for economic independence."
             />
             
             <ProgramCard 
               icon={<Leaf size={28} />}
               title="Environmental Initiatives"
-              description="Tree planting programs and environmental awareness to create a sustainable future for communities."
+              description="In 2012, we planted 500 trees in colleges and schools across Chennai, promoting environmental awareness and sustainability."
             />
             
             <ProgramCard 
               icon={<GraduationCap size={28} />}
               title="Career Guidance"
-              description="Specialized career counseling for people with disabilities and underprivileged students."
+              description="From 2014-2024, specialized career counseling for 600 PWD and underprivileged students, helping them navigate professional journeys."
             />
             
             <ProgramCard 
               icon={<Bike size={28} />}
               title="Bicycle Assembly Training"
-              description="Technical training in bicycle assembly and maintenance in partnership with TI Cycles."
+              description="Technical training in bicycle assembly and maintenance in partnership with TI Cycles for 25 differently-abled persons."
             />
             
             <ProgramCard 
               icon={<BookOpen size={28} />}
-              title="Diary Units for Visually Impaired"
-              description="Providing accessible diary units to support visually impaired individuals in daily activities."
+              title="Legal Advocacy"
+              description="In 2013, filed PIL in Chennai High Court resulting in 636 differently-abled persons securing Group 4 government jobs."
             />
             
             <ProgramCard 
               icon={<Monitor size={28} />}
               title="Digital Literacy"
-              description="Computer training programs to bridge the digital divide and enhance employability."
+              description="In 2014, computer training programs with MSME entrepreneurship development for 250 students, bridging the digital divide."
             />
           </div>
           
@@ -247,7 +247,7 @@ const HomePage = () => {
             <Card className="p-6" hover>
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Diary Units for Visually Impaired</h3>
               <p className="text-gray-600 mb-4">
-                We're expanding our successful diary units program to reach more visually impaired individuals,
+                Continuing to provide specialized diary units for visually impaired individuals,
                 providing them tools for better organization and independence.
               </p>
               <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
@@ -277,7 +277,7 @@ const HomePage = () => {
             <Card className="p-6" hover>
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Legal Advocacy</h3>
               <p className="text-gray-600 mb-4">
-                Ongoing legal efforts in the Supreme Court and High Court to ensure proper implementation
+                Following up on PIL cases in Supreme Court and High Court to ensure proper implementation
                 of job reservations for people with disabilities.
               </p>
               <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
