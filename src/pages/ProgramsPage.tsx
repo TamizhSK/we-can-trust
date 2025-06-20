@@ -12,8 +12,37 @@ import {
 
 import Card from '../components/Card';
 import Button from '../components/Button';
+import Carousel from '../components/Carousel';
 
 const ProgramsPage = () => {
+  // Tailoring program carousel data
+  const tailoringCarouselItems = [
+    {
+      id: 1,
+      image: "https://images.pexels.com/photos/7709280/pexels-photo-7709280.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      title: "Empowering Women Through Tailoring",
+      description: "Our comprehensive tailoring program has transformed the lives of over 1,200 rural women, providing them with essential skills for economic independence."
+    },
+    {
+      id: 2,
+      image: "https://images.pexels.com/photos/3738673/pexels-photo-3738673.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      title: "Skill Development & Training",
+      description: "From basic stitching to advanced garment construction, our program covers all aspects of professional tailoring and fashion design."
+    },
+    {
+      id: 3,
+      image: "https://images.pexels.com/photos/6069112/pexels-photo-6069112.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      title: "Creating Sustainable Livelihoods",
+      description: "Graduates of our program have gone on to start their own businesses, employ others, and become pillars of their communities."
+    },
+    {
+      id: 4,
+      image: "https://images.pexels.com/photos/7709281/pexels-photo-7709281.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      title: "Community Impact",
+      description: "Beyond individual success, our tailoring program has strengthened entire communities by creating networks of skilled artisans."
+    }
+  ];
+
   return (
     <div className="pt-20 pb-16">
       {/* Header */}
@@ -51,25 +80,51 @@ const ProgramsPage = () => {
             </div>
             
             <div className="space-y-24">
-              {/* Tailoring Program */}
-              <ProgramSection
-                title="✂️ Stitching Dreams, Empowering Lives"
-                description="Between 2007 and 2014, our tailoring and garment-making training program transformed the lives of over 1,200 rural women, equipping them with more than just stitching skills — we helped them craft a future of economic independence."
-                icon={<Users size={28} />}
-                image="https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172731/9_u3swz9"
-                stats={[
-                  { label: "Women Trained", value: "1,200+" },
-                  { label: "Success Rate", value: "85%" },
-                  { label: "Duration", value: "7 years" },
-                ]}
-                reverse={false}
-              />
+              {/* Tailoring Program with Carousel */}
+              <div className="grid grid-cols-1 gap-12">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="text-center mb-8">
+                    <div className="inline-flex items-center bg-primary-100 text-primary-700 px-4 py-2 rounded-full mb-4">
+                      <Users size={20} className="mr-2" />
+                      <span className="font-medium">Featured Program</span>
+                    </div>
+                    <h3 className="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-4">
+                      ✂️ Stitching Dreams, Empowering Lives
+                    </h3>
+                    <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                      Between 2007 and 2014, our tailoring and garment-making training program transformed the lives of over 1,200 rural women, 
+                      equipping them with more than just stitching skills — we helped them craft a future of economic independence.
+                    </p>
+                  </div>
+                  
+                  <Carousel items={tailoringCarouselItems} />
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8">
+                    <div className="text-center p-6 bg-primary-50 rounded-lg">
+                      <div className="font-bold text-primary-600 text-3xl mb-2">1,200+</div>
+                      <div className="text-gray-600">Women Trained</div>
+                    </div>
+                    <div className="text-center p-6 bg-primary-50 rounded-lg">
+                      <div className="font-bold text-primary-600 text-3xl mb-2">85%</div>
+                      <div className="text-gray-600">Success Rate</div>
+                    </div>
+                    <div className="text-center p-6 bg-primary-50 rounded-lg">
+                      <div className="font-bold text-primary-600 text-3xl mb-2">7</div>
+                      <div className="text-gray-600">Years Duration</div>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
               
               {/* Environmental Initiatives */}
               <ProgramSection
                 title="🌱 Rooted in Change, Growing for Tomorrow"
-                description="In 2012, 500 trees found their home in Chennai’s schools and colleges — each one a silent promise to the planet.
-With every sapling, we planted a lesson in sustainability and a legacy of green guardianship. 🌳"
+                description="In 2012, 500 trees found their home in Chennai's schools and colleges — each one a silent promise to the planet. With every sapling, we planted a lesson in sustainability and a legacy of green guardianship. 🌳"
                 icon={<Leaf size={28} />}
                 image="https://images.pexels.com/photos/6207383/pexels-photo-6207383.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
                 stats={[
@@ -111,8 +166,7 @@ With every sapling, we planted a lesson in sustainability and a legacy of green 
               {/* Legal Advocacy */}
               <ProgramSection
                 title="⚖️ Paving the Way for Equal Opportunity"
-                description="IIn 2013, we filed a Public Interest Litigation (PIL) in the Chennai High Court, advocating for the rights of differently-abled individuals.
-The resulting landmark judgement secured Group 4 government jobs for 636 deserving candidates, championing inclusion and justice."
+                description="In 2013, we filed a Public Interest Litigation (PIL) in the Chennai High Court, advocating for the rights of differently-abled individuals. The resulting landmark judgement secured Group 4 government jobs for 636 deserving candidates, championing inclusion and justice."
                 icon={<BookOpen size={28} />}
                 image="https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172731/2_sqzyqv"
                 stats={[
@@ -126,8 +180,7 @@ The resulting landmark judgement secured Group 4 government jobs for 636 deservi
               {/* Digital Literacy */}
               <ProgramSection
                 title="💻 Code. Create. Conquer."
-                description="In 2014, 250 students stepped into the digital age with computer training and MSME entrepreneurship skills.
-We didn’t just teach technology — we sparked innovation and built tomorrow’s changemakers. 🚀"
+                description="In 2014, 250 students stepped into the digital age with computer training and MSME entrepreneurship skills. We didn't just teach technology — we sparked innovation and built tomorrow's changemakers. 🚀"
                 icon={<Monitor size={28} />}
                 image="https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172731/1_pkjh49"
                 stats={[
