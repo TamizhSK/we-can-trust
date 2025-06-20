@@ -242,20 +242,22 @@ const DonatePage = () => {
                   </div>
                   
                   {/* Submit Button */}
-                  <Button 
-                    variant="primary" 
-                    fullWidth 
+                    <Button
+                    variant="primary"
+                    fullWidth
                     size="lg"
                     onClick={handleDonate}
                     disabled={!amount}
-                    className="mt-4"
-                  >
-                    <CreditCard size={18} className="mr-2" />
-                    {isRecurring 
-                      ? `Donate ₹${amount} Monthly` 
+                    className="mt-4 flex items-center justify-center gap-2"
+                    >
+                    <CreditCard size={18} />
+                    <span>
+                      {isRecurring
+                      ? `Donate ₹${amount}`
                       : `Donate ₹${amount}`
-                    }
-                  </Button>
+                      }
+                    </span>
+                    </Button>
                   
                   <div className="mt-4 text-center text-sm text-gray-500">
                     Secure payment powered by RazorPay

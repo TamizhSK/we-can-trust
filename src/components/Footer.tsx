@@ -69,15 +69,22 @@ const Footer = () => {
             <ul className="space-y-3 text-sm text-gray-300">
               <li className="flex items-start">
                 <MapPin size={18} className="text-accent-400 mr-2 mt-1 flex-shrink-0" />
-                <span>123 NGO Street, Chennai, Tamil Nadu, India</span>
+                <span>15/564, KAMMALAR STREET,
+                KADALADI POST, KALASAPAKKAM TALUK,
+                TIRUVANNAMALAI DISTRICT,
+                TAMIL NADU, INDIA.
+                POSTAL CODE: 606908.
+</span>
               </li>
               <li className="flex items-center">
                 <Phone size={18} className="text-accent-400 mr-2 flex-shrink-0" />
-                <span>+91 98765 43210</span>
+                <span>+91 9943163345</span>
               </li>
               <li className="flex items-center">
                 <Mail size={18} className="text-accent-400 mr-2 flex-shrink-0" />
-                <span>info@wecantrust.org</span>
+                <span>mercysocialtrust@gmail.com
+
+</span>
               </li>
             </ul>
           </div>

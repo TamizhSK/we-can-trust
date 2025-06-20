@@ -172,7 +172,7 @@ const AboutPage = () => {
               >
                 <div className="relative">
                   <img 
-                    src="https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172731/10_nmptp7" 
+                    src="https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172731/2_sqzyqv" 
                     alt="Founder" 
                     className="rounded-lg shadow-lg w-full"
                   />

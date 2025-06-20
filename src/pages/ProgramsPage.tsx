@@ -20,27 +20,39 @@ const ProgramsPage = () => {
   const tailoringCarouselItems = [
     {
       id: 1,
-      image: "https://images.pexels.com/photos/7709280/pexels-photo-7709280.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      image: "https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172729/7_edua0c.jpg",
       title: "Empowering 1,200 Rural Women",
       description: "From 2007 to 2014, our comprehensive tailoring training program transformed the lives of 1,200 rural women, providing them with essential skills for economic independence and sustainable livelihoods."
     },
     {
       id: 2,
-      image: "https://images.pexels.com/photos/3738673/pexels-photo-3738673.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      image: "https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172729/image_xajv27",
       title: "Professional Skill Development",
       description: "Our program covers everything from basic stitching techniques to advanced garment construction, ensuring participants gain comprehensive tailoring expertise for professional success."
     },
     {
       id: 3,
-      image: "https://images.pexels.com/photos/6069112/pexels-photo-6069112.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      image: "https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172729/8_uukmhy",
       title: "Creating Sustainable Businesses",
       description: "Many graduates have established their own tailoring businesses, becoming entrepreneurs who not only support their families but also provide employment opportunities to others in their communities."
     },
     {
       id: 4,
-      image: "https://images.pexels.com/photos/7709281/pexels-photo-7709281.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      image: "https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172730/5_hzo519.jpg",
       title: "Building Stronger Communities",
       description: "Beyond individual success stories, our tailoring program has created networks of skilled artisans who collaborate, share knowledge, and strengthen their entire communities through collective growth."
+    },
+    {
+      id: 5,
+      image: "https://res.cloudinary.com/dclgg7rhe/image/upload/v1750414287/i3_mm54nf.jpg",
+      title: "Threads of Confidence",
+      description: "Each stitch sewn is a step toward self-confidence—participants leave the program not only with new skills, but with a renewed sense of pride and purpose."
+    },
+    {
+      id: 6,
+      image: "https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172729/3_ohcbr2.jpg",
+      title: "Fashioning a Brighter Future",
+      description: "Graduates showcase their creations at local exhibitions, inspiring others and proving that with opportunity and support, creativity can transform futures."
     }
   ];
 
@@ -310,14 +322,16 @@ const ProgramsPage = () => {
             </div>
             
             <div className="mt-12 text-center">
-              <Button 
-                variant="primary" 
-                size="lg"
-                className="bg-primary-600 hover:bg-primary-700"
-              >
-                <Heart size={18} className="mr-2" />
-                Support Our Programs
-              </Button>
+                <div className="flex justify-center">
+                <Button 
+                  variant="primary" 
+                  size="lg"
+                  className="bg-primary-600 hover:bg-primary-700 flex items-center justify-center gap-2"
+                >
+                  <Heart size={18} />
+                  <span>Support Our Programs</span>
+                </Button>
+                </div>
             </div>
           </div>
         </div>
