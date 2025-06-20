@@ -50,13 +50,6 @@ const ProgramsPage = () => {
     <div className="pt-20 pb-16">
       {/* Creative Header */}
       <div className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 py-20 relative overflow-hidden">
-        {/* Wave divider at top */}
-        <div className="absolute top-0 left-0 right-0">
-          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" className="w-full h-auto rotate-180">
-            <path d="M0 120L48 110C96 100 192 80 288 75C384 70 480 80 576 85C672 90 768 90 864 85C960 80 1056 70 1152 65C1248 60 1344 60 1392 60L1440 60V0H0V120Z" fill="#F9FAFB"/>
-          </svg>
-        </div>
-        
         {/* Animated background elements */}
         <div className="absolute inset-0">
           <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full animate-pulse"></div>
@@ -114,6 +107,22 @@ const ProgramsPage = () => {
               </div>
             </motion.div>
           </div>
+        </div>
+        
+        {/* Wave Divider at bottom */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg 
+            viewBox="0 0 1440 120" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="none"
+            className="w-full h-auto"
+          >
+            <path 
+              d="M0 120L48 110C96 100 192 80 288 75C384 70 480 80 576 85C672 90 768 90 864 85C960 80 1056 70 1152 65C1248 60 1344 60 1392 60L1440 60V0H0V120Z" 
+              fill="#f9fafb"
+            />
+          </svg>
         </div>
       </div>
       
