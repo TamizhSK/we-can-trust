@@ -53,26 +53,27 @@ const ProgramsPage = () => {
             <div className="space-y-24">
               {/* Tailoring Program */}
               <ProgramSection
-                title="Tailoring Training Program"
-                description="Comprehensive training in tailoring and garment making to empower women with skills for economic independence"
+                title="✂️ Stitching Dreams, Empowering Lives"
+                description="Between 2007 and 2014, our tailoring and garment-making training program transformed the lives of over 1,200 rural women, equipping them with more than just stitching skills — we helped them craft a future of economic independence."
                 icon={<Users size={28} />}
-                image="https://images.pexels.com/photos/4262010/pexels-photo-4262010.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                image="https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172731/9_u3swz9"
                 stats={[
                   { label: "Women Trained", value: "1,200+" },
                   { label: "Success Rate", value: "85%" },
-                  { label: "Duration", value: "6 Months" },
+                  { label: "Duration", value: "7 years" },
                 ]}
                 reverse={false}
               />
               
               {/* Environmental Initiatives */}
               <ProgramSection
-                title="Environmental Initiatives"
-                description="Tree planting programs and environmental awareness initiatives to create a sustainable future for our communities"
+                title="🌱 Rooted in Change, Growing for Tomorrow"
+                description="In 2012, 500 trees found their home in Chennai’s schools and colleges — each one a silent promise to the planet.
+With every sapling, we planted a lesson in sustainability and a legacy of green guardianship. 🌳"
                 icon={<Leaf size={28} />}
                 image="https://images.pexels.com/photos/6207383/pexels-photo-6207383.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
                 stats={[
-                  { label: "Trees Planted", value: "300+" },
+                  { label: "Trees Planted", value: "500" },
                   { label: "Communities Reached", value: "15" },
                   { label: "Environmental Workshops", value: "24" },
                 ]}
@@ -84,10 +85,10 @@ const ProgramsPage = () => {
                 title="Career Guidance Program"
                 description="Specialized career counseling for people with disabilities and underprivileged students to help them identify suitable career paths"
                 icon={<GraduationCap size={28} />}
-                image="https://images.pexels.com/photos/6238297/pexels-photo-6238297.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                image="https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172731/5_hzo519"
                 stats={[
                   { label: "Students Guided", value: "600+" },
-                  { label: "Placement Rate", value: "70%" },
+                  { label: "Duration", value: "2014-2024" },
                   { label: "Schools Reached", value: "25" },
                 ]}
                 reverse={false}
@@ -98,24 +99,25 @@ const ProgramsPage = () => {
                 title="Bicycle Assembly Training"
                 description="Technical training in bicycle assembly and maintenance in partnership with TI Cycles, providing practical vocational skills"
                 icon={<Bike size={28} />}
-                image="https://images.pexels.com/photos/5210526/pexels-photo-5210526.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                image="https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172731/7_edua0c"
                 stats={[
-                  { label: "People Trained", value: "50" },
-                  { label: "Women Participants", value: "15" },
-                  { label: "Men Participants", value: "35" },
+                  { label: "People Trained", value: "25+" },
+                  { label: "Women Participants", value: "10" },
+                  { label: "Men Participants", value: "16" },
                 ]}
                 reverse={true}
               />
               
-              {/* Diary Units */}
+              {/* Legal Advocacy */}
               <ProgramSection
-                title="Diary Units for Visually Impaired"
-                description="Providing accessible diary units to support visually impaired individuals in managing their daily activities and improving organization"
+                title="⚖️ Paving the Way for Equal Opportunity"
+                description="IIn 2013, we filed a Public Interest Litigation (PIL) in the Chennai High Court, advocating for the rights of differently-abled individuals.
+The resulting landmark judgement secured Group 4 government jobs for 636 deserving candidates, championing inclusion and justice."
                 icon={<BookOpen size={28} />}
-                image="https://images.pexels.com/photos/3760810/pexels-photo-3760810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                image="https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172731/2_sqzyqv"
                 stats={[
-                  { label: "Units Provided", value: "25" },
-                  { label: "Target for 2025", value: "100" },
+                  { label: "Jobs Provided", value: "636" },
+                  { label: "Target for 2025", value: "1000+" },
                   { label: "Satisfaction Rate", value: "95%" },
                 ]}
                 reverse={false}
@@ -123,12 +125,13 @@ const ProgramsPage = () => {
               
               {/* Digital Literacy */}
               <ProgramSection
-                title="Digital Literacy Program"
-                description="Computer training programs to bridge the digital divide and enhance employability in today's technology-driven world"
+                title="💻 Code. Create. Conquer."
+                description="In 2014, 250 students stepped into the digital age with computer training and MSME entrepreneurship skills.
+We didn’t just teach technology — we sparked innovation and built tomorrow’s changemakers. 🚀"
                 icon={<Monitor size={28} />}
-                image="https://images.pexels.com/photos/6238118/pexels-photo-6238118.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                image="https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172731/1_pkjh49"
                 stats={[
-                  { label: "People Trained", value: "200+" },
+                  { label: "People Trained", value: "250+" },
                   { label: "Course Duration", value: "3 Months" },
                   { label: "Completion Rate", value: "80%" },
                 ]}
@@ -154,11 +157,11 @@ const ProgramsPage = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <OngoingProject 
-                title="Diary Units Expansion"
-                description="Expanding our successful diary units program to reach more visually impaired individuals"
+                title="Disability Awareness Program"
+                description="Expanding our successful Awareness program to reach more  individuals"
                 icon={<BookOpen size={24} />}
-                progress={75}
-                goal="100 Units"
+                progress={55}
+                goal="500 Individuals"
               />
               
               <OngoingProject 
