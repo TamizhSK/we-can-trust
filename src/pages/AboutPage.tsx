@@ -128,7 +128,7 @@ const AboutPage = () => {
                 viewport={{ once: true }}
                 className="order-2 md:order-1"
               >
-                <h3 className="text-2xl px-6 sm:px-1 font-display font-semibold text-gray-900 mb-4">
+                <h3 className="text-2xl px-6 sm:px font-display font-semibold text-gray-900 mb-4">
                   Mr. S. Chezhiyan
                 </h3>
                 

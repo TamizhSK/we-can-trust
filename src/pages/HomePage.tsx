@@ -125,20 +125,23 @@ const HomePage = () => {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 viewport={{ once: true }}
               >
-                <h2 className="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-4">Our Founder's Story</h2>
-                <p className="text-gray-600 mb-6">
+                {/* space-y-6 text-justify px-6 sm:px-1 text-gray-600 */}
+                <div className="space-y-6 text-justify px-6 sm:px-1 text-gray-600 py-4">
+                  <h2 className="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-4 text-justify">Our Founder's Story</h2>
+                  <p className="text-gray-600 mb-6 text-justify">
                   Mr. S. Chezhiyan lost his eyesight due to Glaucoma while studying 12th grade. Despite this challenge,
                   he persevered and earned multiple degrees including a diploma in Electric and Electronics Engineering,
                   a graduate degree in History, post graduation in History, and Master of Philosophy in History.
-                </p>
-                <p className="text-gray-600 mb-6">
+                  </p>
+                  <p className="text-gray-600 mb-6 text-justify">
                   Despite his qualifications, he faced employment discrimination due to his disability. This 
                   experience motivated him to establish this charity to fight for the rights of people with 
                   disabilities and create opportunities for the underprivileged.
-                </p>
-                <blockquote className="border-l-4 border-primary-500 pl-4 italic text-gray-700 mb-6">
+                  </p>
+                  <blockquote className="border-l-4 border-primary-500 pl-4 italic text-gray-700 mb-6 text-justify">
                   "It is better to light a candle than curse the darkness."
-                </blockquote>
+                  </blockquote>
+                </div>
                 <Link to="/about">
                   <Button variant="outline">
                     Read Full Story
@@ -165,21 +168,21 @@ const HomePage = () => {
               quote="The tailoring program gave me the skills to start my own business. I now support my family and have even hired two other women from my community."
               name="Lakshmi"
               role="Tailoring Program Graduate"
-              image="https://images.pexels.com/photos/7387432/pexels-photo-7387432.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+              
             />
             
             <TestimonialCard
               quote="As a visually impaired person, the diary unit has transformed how I organize my day and track my activities. It's given me greater independence."
               name="Rajesh"
               role="Diary Unit Recipient"
-              image="https://images.pexels.com/photos/8090127/pexels-photo-8090127.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+             
             />
             
             <TestimonialCard
               quote="The career guidance program helped me identify my strengths and secure a job that accommodates my disability. I'm now financially independent."
               name="Priya"
               role="Career Guidance Participant"
-              image="https://images.pexels.com/photos/8850731/pexels-photo-8850731.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+              
             />
           </div>
         </div>
@@ -265,13 +268,7 @@ const HomePage = () => {
                 Providing specialized career guidance sessions for youth with disabilities, helping them
                 identify suitable career paths and opportunities.
               </p>
-              <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
-                <div className="bg-primary-500 h-2 rounded-full" style={{ width: '60%' }}></div>
-              </div>
-              <div className="flex justify-between text-sm text-gray-600">
-                <span>60% Complete</span>
-                <span>Goal: 200 Students</span>
-              </div>
+         
             </Card>
             
             <Card className="p-6" hover>
