@@ -24,48 +24,39 @@ const ContactPage = () => {
     }));
   };
   
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setIsSubmitting(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    try {
+      const res = await fetch(
+        `${'http://localhost:8000'}/api/contact/submit`,
+        {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          credentials: 'include',
+          body: JSON.stringify(formData),
+        }
+      );
+      let data: any = null;
+      try {
+        data = await res.json();
+      } catch {
+        console.warn('No JSON in response');
+      }
+      if(!res.ok) throw new Error(data?.message || res.statusText);
 
-  try {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/contact`, {
-
-
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
-
-    if (response.ok) {
-      setIsSubmitted(true);
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        subject: '',
-        message: '',
-      });
-
-      // Reset submitted state after 5 seconds
-      setTimeout(() => {
-        setIsSubmitted(false);
-      }, 5000);
-    } else {
-      const errorData = await response.text();
-      console.error('Server error:', errorData);
-      alert('Something went wrong. Please try again later.');
+      setIsSubmitting(true);
+      setFormData({name: '', email: '', phone: '', subject: '', message: ''});
+      alert('Message sent successfully!');
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || 'Something went wrong');
+    } finally {
+      setIsSubmitting(false);
+      setTimeout(() => setIsSubmitted(false), 5000);
     }
-  } catch (error) {
-    console.error('Network error:', error);
-    alert('Something went wrong. Please try again later.');
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
+  };
   
   return (
     <div className="pb-16">
@@ -144,19 +135,19 @@ const handleSubmit = async (e: React.FormEvent) => {
                   <ContactInfo 
                     icon={<MapPin size={24} />} 
                     title="Our Location" 
-                    content={<>15/564, Kammalar Street<br />Kalasapakkam Taluk, Tiruvanamalai District,<br />India</>} 
+                    content={<>123 NGO Street<br />Chennai, Tamil Nadu<br />India</>} 
                   />
                   
                   <ContactInfo 
                     icon={<Phone size={24} />} 
                     title="Phone Number" 
-                    content={<>+91 9943163345<br /></>} 
+                    content={<>+91 98765 43210<br />+91 98765 43211</>} 
                   />
                   
                   <ContactInfo 
                     icon={<Mail size={24} />} 
                     title="Email Address" 
-                    content={<>mercysocialtrust@gmail.com<br />support@wecantrustyou.org</>} 
+                    content={<>info@wecantrustyou.org<br />support@wecantrustyou.org</>} 
                   />
                   
                   <ContactInfo 
