@@ -128,7 +128,8 @@ const AboutPage = () => {
                 viewport={{ once: true }}
                 className="order-2 md:order-1"
               >
-                <h3 className="text-2xl px-6 sm:px-0 font-display font-semibold text-gray-900 mb-4">
+              
+                <h3 className="text-2xl px-6 sm:px font-display font-semibold text-gray-900 mb-4">
                   Mr. S. Chezhiyan
                 </h3>
                 
@@ -460,41 +461,7 @@ const AboutPage = () => {
   );
 };
 
-interface TimelineItemProps {
-  icon: React.ReactNode;
-  year: string;
-  title: string;
-  description: string;
-  isLeft: boolean;
-}
 
-const TimelineItem = ({ icon, year, title, description, isLeft }: TimelineItemProps) => {
-  return (
-    <motion.div 
-      initial={{ opacity: 0, x: isLeft ? -20 : 20 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5 }}
-      viewport={{ once: true }}
-      className={`flex items-center ${isLeft ? 'flex-row-reverse' : ''}`}
-    >
-      <div className="w-1/2"></div>
-      
-      <div className="relative flex justify-center">
-        <div className="h-12 w-12 rounded-full bg-primary-500 flex items-center justify-center text-white z-10">
-          {icon}
-        </div>
-      </div>
-      
-      <div className="w-1/2">
-        <Card className={`p-6 ${isLeft ? 'mr-10' : 'ml-10'}`}>
-          <div className="text-sm font-semibold text-primary-600 mb-1">{year}</div>
-          <h4 className="text-lg font-semibold text-gray-800 mb-2">{title}</h4>
-          <p className="text-gray-600">{description}</p>
-        </Card>
-      </div>
-    </motion.div>
-  );
-};
 
 interface ValueCardProps {
   title: string;
