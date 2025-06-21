@@ -155,7 +155,7 @@ const AboutPage = () => {
                     to strengthen his ability to create positive social change.
                   </p>
                   
-                  <blockquote className="border-l-4 border-primary-500 pl-4 italic">
+                  <blockquote className="border-l-4 border-primary-500 pl-4 italic text-justify">
                     "It is better to light a candle than curse the darkness. As long as I live, I will fight for the rights
                     of people with disabilities and the underprivileged."
                     <footer className="text-sm mt-2 text-gray-500">- S. Chezhiyan</footer>
@@ -299,58 +299,6 @@ const AboutPage = () => {
           </div>
         </div>
       </section>
-      
-      {/* Team */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-4">Our Team</h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Dedicated professionals working to create positive change
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              <TeamMember 
-                name="S. Chezhiyan" 
-                role="Founder & Director"
-                image="https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172731/10_nmptp7"
-              />
-              
-              <TeamMember 
-                name="Priya Lakshmi" 
-                role="Program Coordinator"
-                image="https://images.pexels.com/photos/3767405/pexels-photo-3767405.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-              />
-              
-              <TeamMember 
-                name="Raj Kumar" 
-                role="Legal Advocate"
-                image="https://images.pexels.com/photos/5384445/pexels-photo-5384445.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-              />
-              
-              <TeamMember 
-                name="Ananya Singh" 
-                role="Vocational Trainer"
-                image="https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-              />
-              
-              <TeamMember 
-                name="Vikram Patel" 
-                role="Community Outreach"
-                image="https://images.pexels.com/photos/8427047/pexels-photo-8427047.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-              />
-              
-              <TeamMember 
-                name="Meena Rao" 
-                role="Finance Manager"
-                image="https://images.pexels.com/photos/1587009/pexels-photo-1587009.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };
@@ -415,35 +363,6 @@ const ValueCard = ({ title, description }: ValueCardProps) => {
   );
 };
 
-interface TeamMemberProps {
-  name: string;
-  role: string;
-  image: string;
-}
 
-const TeamMember = ({ name, role, image }: TeamMemberProps) => {
-  return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      viewport={{ once: true }}
-    >
-      <Card className="overflow-hidden" hover>
-        <div className="h-64 overflow-hidden">
-          <img 
-            src={image} 
-            alt={name} 
-            className="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105" 
-          />
-        </div>
-        <div className="p-4 text-center">
-          <h3 className="text-lg font-semibold text-gray-800">{name}</h3>
-          <p className="text-primary-600">{role}</p>
-        </div>
-      </Card>
-    </motion.div>
-  );
-};
 
 export default AboutPage;

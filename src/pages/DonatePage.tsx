@@ -24,7 +24,7 @@ const DonatePage = () => {
   if (!amount) return;
 
   const options = {
-    key: 'rzp_test_x9oniUVmCnoxcV', // Replace with your Razorpay Key ID
+    key: 'api_key', // Replace with your Razorpay Key ID
     amount: Number(amount) * 100, // Razorpay takes amount in paisa
     currency: 'INR',
     name: 'Your Organization Name',

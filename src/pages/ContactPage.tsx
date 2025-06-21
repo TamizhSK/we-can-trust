@@ -24,13 +24,22 @@ const ContactPage = () => {
     }));
   };
   
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+
+  try {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/contact`, {
+
+
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
       setIsSubmitted(true);
       setFormData({
         name: '',
@@ -39,13 +48,24 @@ const ContactPage = () => {
         subject: '',
         message: '',
       });
-      
-      // Reset the submitted state after 5 seconds
+
+      // Reset submitted state after 5 seconds
       setTimeout(() => {
         setIsSubmitted(false);
       }, 5000);
-    }, 1500);
-  };
+    } else {
+      const errorData = await response.text();
+      console.error('Server error:', errorData);
+      alert('Something went wrong. Please try again later.');
+    }
+  } catch (error) {
+    console.error('Network error:', error);
+    alert('Something went wrong. Please try again later.');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
   
   return (
     <div className="pb-16">
@@ -124,19 +144,19 @@ const ContactPage = () => {
                   <ContactInfo 
                     icon={<MapPin size={24} />} 
                     title="Our Location" 
-                    content={<>123 NGO Street<br />Chennai, Tamil Nadu<br />India</>} 
+                    content={<>15/564, Kammalar Street<br />Kalasapakkam Taluk, Tiruvanamalai District,<br />India</>} 
                   />
                   
                   <ContactInfo 
                     icon={<Phone size={24} />} 
                     title="Phone Number" 
-                    content={<>+91 98765 43210<br />+91 98765 43211</>} 
+                    content={<>+91 9943163345<br /></>} 
                   />
                   
                   <ContactInfo 
                     icon={<Mail size={24} />} 
                     title="Email Address" 
-                    content={<>info@wecantrustyou.org<br />support@wecantrustyou.org</>} 
+                    content={<>mercysocialtrust@gmail.com<br />support@wecantrustyou.org</>} 
                   />
                   
                   <ContactInfo 
