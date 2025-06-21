@@ -128,11 +128,11 @@ const AboutPage = () => {
                 viewport={{ once: true }}
                 className="order-2 md:order-1"
               >
-                <h3 className="text-2xl font-display font-semibold text-gray-900 mb-4">
+                <h3 className="text-2xl px-6 sm:px-1 font-display font-semibold text-gray-900 mb-4">
                   Mr. S. Chezhiyan
                 </h3>
                 
-                <div className="space-y-6 text-gray-600">
+                <div className="space-y-6 text-justify px-6 sm:px-1 text-gray-600">
                   <p>
                     Mr. S. Chezhiyan lost his eyesight due to Glaucoma when he was studying in 12th grade,
                     forcing him to discontinue his education for four years.
@@ -170,7 +170,7 @@ const AboutPage = () => {
                 viewport={{ once: true }}
                 className="order-1 md:order-2"
               >
-                <div className="relative">
+                <div className="relative px-5 sm:px-0">
                   <img 
                     src="https://res.cloudinary.com/dclgg7rhe/image/upload/v1750172731/2_sqzyqv" 
                     alt="Founder" 
