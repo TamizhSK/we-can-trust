@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Award, Briefcase, GraduationCap, Heart, Eye, BookOpen } from 'lucide-react';
+import { Award, Briefcase, GraduationCap, Heart, Eye, BookOpen, HandHeart } from 'lucide-react';
 import Card from '../components/Card';
 
 const AboutPage = () => {
@@ -178,7 +178,7 @@ const AboutPage = () => {
                     className="rounded-lg shadow-lg w-full"
                   />
                   <div className="absolute -bottom-6 -right-6 bg-primary-600 rounded-lg p-6 shadow-lg hidden md:block">
-                    <BookOpen size={36} className="text-white" />
+                    <HandHeart size={36} className="text-white" />
                   </div>
                 </div>
               </motion.div>
@@ -446,7 +446,7 @@ const AboutPage = () => {
               
               <ValueCard 
                 title="Innovation" 
-                description="We constantly seek creative solutions to address the challenges faced by the communities we serve."
+                description="We constantly seek creative solutions to address the challenges faced by the communities."
               />
               
               <ValueCard 
