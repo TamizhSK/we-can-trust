@@ -1,15 +1,60 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CreditCard, Heart, Users, GraduationCap, Lightbulb } from 'lucide-react';
 import Button from '../components/Button';
 import Card from '../components/Card';
 
+// Razorpay types
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
+
+interface RazorpayResponse {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+}
+
 const DonatePage = () => {
   const [amount, setAmount] = useState<number | ''>('');
+  const [donorName, setDonorName] = useState<string>('');
+  const [donorEmail, setDonorEmail] = useState<string>('');
   const [donationType, setDonationType] = useState<string>('general');
   const [isRecurring, setIsRecurring] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [razorpayKey, setRazorpayKey] = useState<string>('');
 
-  const handleAmountClick = (value: number) => {
+  const apiUri = import.meta.env.VITE_API_URI || "http://localhost:8000";
+
+  // Load Razorpay script and get configuration
+  useEffect(() => {
+    const loadRazorpay = () => {
+      return new Promise((resolve) => {
+        const script = document.createElement('script');
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        script.onload = () => resolve(true);
+        script.onerror = () => resolve(false);
+        document.body.appendChild(script);
+      });
+    };
+
+    const fetchRazorpayConfig = async () => {
+      try {
+        const response = await fetch(`${apiUri}/api/donations/razorpay-config`);
+        const data = await response.json();
+        if (data.success) {
+          setRazorpayKey(data.razorpayKeyId);
+        }
+      } catch (error) {
+        console.error('Error fetching Razorpay config:', error);
+      }
+    };
+
+    loadRazorpay();
+    fetchRazorpayConfig();
+  }, [apiUri]);  const handleAmountClick = (value: number) => {
     setAmount(value);
   };
 
@@ -20,37 +65,119 @@ const DonatePage = () => {
     }
   };
 
-  const handleDonate = () => {
-  if (!amount) return;
-
-  const options = {
-    key: 'api_key', // Replace with your Razorpay Key ID
-    amount: Number(amount) * 100, // Razorpay takes amount in paisa
-    currency: 'INR',
-    name: 'Your Organization Name',
-    description: `Donation for ${donationType} cause`,
-    image: 'https://your-logo-url.com/logo.png', // Optional
-    handler: function (response: any) {
-      alert(`Payment successful! Payment ID: ${response.razorpay_payment_id}`);
-      // TODO: Send the response to your backend to verify and store
-    },
-    prefill: {
-      name: '', // Optionally add user info here
-      email: '',
-      contact: '',
-    },
-    notes: {
-      cause: donationType,
-      recurring: isRecurring ? 'Yes' : 'No',
-    },
-    theme: {
-      color: '#6C63FF',
-    },
+  const getPurposeText = (type: string) => {
+    const purposes = {
+      general: 'General Support',
+      education: 'Education & Training',
+      advocacy: 'Legal Advocacy',
+      community: 'Community Projects'
+    };
+    return purposes[type as keyof typeof purposes] || 'General Support';
   };
 
-  const rzp = new (window as any).Razorpay(options);
-  rzp.open();
-};
+  const handleDonate = async () => {
+    if (!amount || !donorName || !donorEmail) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    if (!razorpayKey) {
+      alert('Payment system not ready. Please try again.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // Create order
+      const orderResponse = await fetch(`${apiUri}/api/donations/create-order`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          amount: Number(amount),
+          donorName,
+          donorEmail,
+          purpose: getPurposeText(donationType)
+        })
+      });
+
+      const orderData = await orderResponse.json();
+
+      if (!orderResponse.ok) {
+        throw new Error(orderData.error || 'Failed to create order');
+      }
+
+      // Initialize Razorpay
+      const options = {
+        key: razorpayKey,
+        amount: orderData.amount * 100,
+        currency: orderData.currency,
+        name: 'We Can Trust',
+        description: getPurposeText(donationType),
+        order_id: orderData.orderId,
+        handler: async (response: RazorpayResponse) => {
+          try {
+            // Verify payment
+            const verifyResponse = await fetch(`${apiUri}/api/donations/verify-payment`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              credentials: 'include',
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                donationId: orderData.donationId
+              })
+            });
+
+            const verifyData = await verifyResponse.json();
+
+            if (verifyData.success) {
+              alert('Thank you for your donation! Payment successful.');
+              // Reset form
+              setAmount('');
+              setDonorName('');
+              setDonorEmail('');
+              setDonationType('general');
+              setIsRecurring(false);
+            } else {
+              alert('Payment verification failed. Please contact support.');
+            }
+          } catch (error) {
+            console.error('Error verifying payment:', error);
+            alert('Payment verification failed. Please contact support.');
+          } finally {
+            setIsLoading(false);
+          }
+        },
+        prefill: {
+          name: donorName,
+          email: donorEmail
+        },
+        theme: {
+          color: '#0066cc'
+        },
+        modal: {
+          ondismiss: () => {
+            setIsLoading(false);
+          }
+        }
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+
+    } catch (error) {
+      console.error('Error creating donation order:', error);
+      alert('Failed to process donation. Please try again.');
+      setIsLoading(false);
+    }
+  };
 
 
   return (
@@ -126,6 +253,34 @@ const DonatePage = () => {
               <div className="md:col-span-2">
                 <Card className="p-8">
                   <h2 className="text-2xl font-semibold text-gray-900 mb-6">Your Donation</h2>
+
+                  <div className='mb-8'>
+                    <h3 className="text-lg font-medium text-gray-800 mb-3">Donor Information:</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
+                        <input
+                          type="text"
+                          value={donorName}
+                          onChange={(e) => setDonorName(e.target.value)}
+                          placeholder="Enter your name"
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-300 focus:border-primary-400 outline-none transition-colors"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
+                        <input
+                          type="email"
+                          value={donorEmail}
+                          onChange={(e) => setDonorEmail(e.target.value)}
+                          placeholder="Enter your email"
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-300 focus:border-primary-400 outline-none transition-colors"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
                   
                   {/* Donation Type */}
                   <div className="mb-8">
@@ -188,7 +343,8 @@ const DonatePage = () => {
                       {[500, 1000, 2500, 5000].map((value) => (
                         <button
                           key={value}
-                          className={`py-3 rounded-lg border font-medium transition-colors {
+                          type="button"
+                          className={`py-3 rounded-lg border font-medium transition-colors ${
                             amount === value 
                               ? 'bg-primary-50 border-primary-500 text-primary-700' 
                               : 'border-gray-300 hover:border-primary-300'
@@ -247,16 +403,25 @@ const DonatePage = () => {
                     fullWidth
                     size="lg"
                     onClick={handleDonate}
-                    disabled={!amount}
+                    disabled={!amount || !donorName || !donorEmail || isLoading}
                     className="mt-4 flex items-center justify-center gap-2"
                     >
-                    <CreditCard size={18} />
-                    <span>
-                      {isRecurring
-                      ? `Donate ₹${amount}`
-                      : `Donate ₹${amount}`
-                      }
-                    </span>
+                    {isLoading ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <CreditCard size={18} />
+                        <span>
+                          Donate ₹{amount || 0}
+                        </span>
+                      </>
+                    )}
                     </Button>
                   
                   <div className="mt-4 text-center text-sm text-gray-500">

@@ -146,9 +146,33 @@ app.post("/api/auth/logout", (req, res) => {
 });
 
 // Donation routes
+
+// Get Razorpay configuration
+app.get("/api/donations/razorpay-config", (req, res) => {
+  res.json({
+    success: true,
+    razorpayKeyId: process.env.RAZORPAY_KEY_ID
+  });
+});
+
 app.post("/api/donations/create-order", async (req, res) => {
   try {
     const { amount, donorName, donorEmail, purpose } = req.body;
+    
+    // Validation
+    if (!amount || !donorName || !donorEmail) {
+      return res.status(400).json({ 
+        success: false, 
+        error: "Amount, donor name, and donor email are required" 
+      });
+    }
+
+    if (amount < 1) {
+      return res.status(400).json({ 
+        success: false, 
+        error: "Amount must be at least ₹1" 
+      });
+    }
     
     const options = {
       amount: amount * 100, // Razorpay expects amount in paisa
@@ -171,6 +195,7 @@ app.post("/api/donations/create-order", async (req, res) => {
     await donation.save();
 
     res.json({
+      success: true,
       orderId: order.id,
       amount: amount,
       currency: "INR",
@@ -178,7 +203,11 @@ app.post("/api/donations/create-order", async (req, res) => {
     });
   } catch (error) {
     console.error("Error creating order:", error);
-    res.status(500).json({ error: "Failed to create order" });
+    res.status(500).json({ 
+      success: false, 
+      error: "Failed to create order",
+      details: error.message 
+    });
   }
 });
 
