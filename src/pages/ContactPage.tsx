@@ -15,6 +15,8 @@ const ContactPage = () => {
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const apiUri = import.meta.env.API_URI as string || 'http://localhost:8000';
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -30,7 +32,7 @@ const ContactPage = () => {
     
     try {
       const res = await fetch(
-        `${'http://localhost:8000'}/api/contact/submit`,
+        `${apiUri}/api/contact/submit`,
         {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
