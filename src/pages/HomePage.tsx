@@ -268,7 +268,13 @@ const HomePage = () => {
                 Providing specialized career guidance sessions for youth with disabilities, helping them
                 identify suitable career paths and opportunities.
               </p>
-         
+              <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                <div className="bg-primary-500 h-2 rounded-full" style={{ width: '60%' }}></div>
+              </div>
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>60% Complete</span>
+                <span>Goal: 200 Students</span>
+              </div>
             </Card>
             
             <Card className="p-6" hover>
