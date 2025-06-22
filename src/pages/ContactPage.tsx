@@ -155,19 +155,19 @@ const ContactPage = () => {
                   <ContactInfo 
                     icon={<MapPin size={24} />} 
                     title="Our Location" 
-                    content={<>123 NGO Street<br />Chennai, Tamil Nadu<br />India</>} 
+                    content={<>15/564, Kammalar Street, Kadalai post,<br />Kalasapakkam Taluk, Tiruvannamalai<br /> Tamil Nadu, India</>} 
                   />
                   
                   <ContactInfo 
                     icon={<Phone size={24} />} 
                     title="Phone Number" 
-                    content={<>+91 98765 43210<br />+91 98765 43211</>} 
+                    content={<>+91 9943163345<br /></>} 
                   />
                   
                   <ContactInfo 
                     icon={<Mail size={24} />} 
                     title="Email Address" 
-                    content={<>info@wecantrust.org<br />support@wecantrust.org</>} 
+                    content={<>mercysocialtrust@gmail.com<br /></>} 
                   />
                   
                   <ContactInfo 
