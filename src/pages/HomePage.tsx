@@ -21,7 +21,6 @@ const HomePage = () => {
   return (
     <div>
       <Hero />
-      
       {/* Impact Section */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -103,7 +102,7 @@ const HomePage = () => {
       <section className="py-16 bg-primary-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-5xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-4 sm:px-0 ">
               <motion.div 
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -125,8 +124,8 @@ const HomePage = () => {
                 viewport={{ once: true }}
               >
                 {/* space-y-6 text-justify px-6 sm:px-1 text-gray-600 */}
-                <div className="space-y-6 text-justify px-6 sm:px-1 text-gray-600 py-4">
-                  <h2 className="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-4 text-justify">Our Founder's Story</h2>
+                <div className="space-y-6 text-justify text-gray-600 py-4">
+                  <h2 className="text-2xl md:text-4xl font-display font-bold text-gray-900 mb-4 text-center">Our Founder's Story</h2>
                   <p className="text-gray-600 mb-6 text-justify">
                   Mr. S. Chezhiyan lost his eyesight due to Glaucoma while studying 12th grade. Despite this challenge,
                   he persevered and earned multiple degrees including a diploma in Electric and Electronics Engineering,
@@ -142,7 +141,7 @@ const HomePage = () => {
                   </blockquote>
                 </div>
                 <Link to="/about">
-                  <Button variant="outline">
+                  <Button variant="outline" >
                     Read Full Story
                   </Button>
                 </Link>

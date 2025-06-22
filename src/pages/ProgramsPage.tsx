@@ -14,6 +14,7 @@ import {
 import Card from '../components/Card';
 import Button from '../components/Button';
 import Carousel from '../components/Carousel';
+import { Link } from 'react-router-dom';
 
 const ProgramsPage = () => {
   // Tailoring program carousel data
@@ -60,25 +61,43 @@ const ProgramsPage = () => {
     <div className="pb-16">
       {/* Creative Header */}
       <div className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 py-40 relative overflow-hidden">
-        {/* Animated background elements */}
-        <div className="absolute inset-0">
-          <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full animate-pulse"></div>
-          <div className="absolute top-32 right-20 w-16 h-16 bg-accent-400/20 rounded-full animate-bounce"></div>
-          <div className="absolute bottom-20 left-1/4 w-12 h-12 bg-secondary-400/30 rounded-full animate-pulse"></div>
-          <div className="absolute bottom-32 right-1/3 w-24 h-24 bg-white/5 rounded-full animate-bounce"></div>
-        </div>
-        
-        {/* Decorative pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <defs>
-              <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" strokeWidth="0.5"/>
-              </pattern>
-            </defs>
-            <rect width="100" height="100" fill="url(#grid)" />
-          </svg>
-        </div>
+    <div className="absolute inset-0 z-0">
+      {/* Animated blurred gradient background with amber blobs */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div
+          className="absolute inset-0 w-full h-full"
+            style={{
+            backgroundImage: 
+              'radial-gradient(circle at 20% 30%, rgba(255, 235, 59, 0.7) 0%, transparent 50%), ' +
+              'radial-gradient(circle at 80% 50%, rgba(76, 175, 80, 0.6) 0%, transparent 50%), ' +
+              'radial-gradient(circle at 50% 80%, rgba(255, 152, 0, 0.5) 0%, transparent 50%)',
+            backgroundSize: '200% 200%',
+            animation: 'animatedGradient 16s ease-in-out infinite',
+            filter: 'blur(60px)',
+            opacity: 0.7,
+          }}
+        />
+      </div>
+
+      {/* Optional: Decorative grid pattern on top */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
+        <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <defs>
+            <pattern id="grid-hero" width="8" height="8" patternUnits="userSpaceOnUse">
+              <path d="M 8 0 L 0 0 0 8" fill="none" stroke="currentColor" strokeWidth="0.3" />
+              <circle cx="0" cy="0" r="0.5" fill="currentColor" opacity="0.3" />
+            </pattern>
+            <linearGradient id="gridGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="white" stopOpacity="0.8" />
+              <stop offset="50%" stopColor="white" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="white" stopOpacity="0.1" />
+            </linearGradient>
+          </defs>
+          <rect width="100" height="100" fill="url(#grid-hero)" stroke="url(#gridGradient)" />
+        </svg>
+      </div>
+    </div>
+
         
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
@@ -139,7 +158,7 @@ const ProgramsPage = () => {
                     <span className="font-semibold text-lg">Featured Program</span>
                   </div>
                   <h2 className="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-6">
-                    ✂️ Tailoring Training Program
+                    Tailoring Training Program
                   </h2>
                   <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
                     From 2007 to 2014, our flagship tailoring and garment-making training program became a beacon of hope 
@@ -177,84 +196,84 @@ const ProgramsPage = () => {
               {/* Environmental Initiatives */}
               <ProgramCard
                 icon={<TreePine size={32} />}
-                title="🌱 Environmental Initiatives"
+                title="Environmental Initiatives"
                 description="In 2012, we planted 500 trees in colleges and schools across Chennai, creating green spaces and promoting environmental awareness among students and communities."
                 stats={[
                   { label: "Trees Planted", value: "500" },
                   { label: "Institutions", value: "25+" },
                   { label: "Year", value: "2012" }
                 ]}
-                color="bg-green-50 border-green-200"
+                color=" border-green-200"
                 iconColor="text-green-600"
               />
 
               {/* Bicycle Assembly Training */}
               <ProgramCard
                 icon={<Bike size={32} />}
-                title="🚲 Bicycle Assembly Training"
+                title="Bicycle Assembly Training"
                 description="In collaboration with TI Cycles, we provided specialized bicycle repair and assembly training to 25 differently-abled persons, opening new employment opportunities."
                 stats={[
                   { label: "Trainees", value: "25" },
                   { label: "Partner", value: "TI Cycles" },
                   { label: "Skills", value: "Assembly & Repair" }
                 ]}
-                color="bg-blue-50 border-blue-200"
+                color=" border-blue-200"
                 iconColor="text-blue-600"
               />
 
               {/* Legal Advocacy */}
               <ProgramCard
                 icon={<Scale size={32} />}
-                title="⚖️ Legal Advocacy"
+                title="Legal Advocacy"
                 description="In 2013, we filed a Public Interest Litigation in Chennai High Court, resulting in a landmark judgment that secured Group 4 government jobs for 636 differently-abled persons."
                 stats={[
                   { label: "Jobs Secured", value: "636" },
                   { label: "Court", value: "Chennai HC" },
                   { label: "Year", value: "2013" }
                 ]}
-                color="bg-purple-50 border-purple-200"
+                color="border-purple-200"
                 iconColor="text-purple-600"
               />
 
               {/* Digital Literacy */}
               <ProgramCard
                 icon={<Monitor size={32} />}
-                title="💻 Digital Literacy & Entrepreneurship"
+                title="Digital Literacy & Entrepreneurship"
                 description="In 2014, we conducted computer training programs along with MSME entrepreneurship development for 250 students, bridging the digital divide."
                 stats={[
                   { label: "Students", value: "250" },
                   { label: "Skills", value: "IT + Business" },
                   { label: "Year", value: "2014" }
                 ]}
-                color="bg-indigo-50 border-indigo-200"
+                color=" border-indigo-200"
                 iconColor="text-indigo-600"
               />
 
               {/* Career Guidance */}
               <ProgramCard
                 icon={<GraduationCap size={32} />}
-                title="🎓 Career Guidance Program"
+                title="Career Guidance Program"
                 description="From 2014 to 2024, we provided comprehensive career counseling and guidance to 600 PWD and underprivileged students, helping them navigate their professional journeys."
                 stats={[
                   { label: "Students Guided", value: "600" },
                   { label: "Duration", value: "10 Years" },
                   { label: "Period", value: "2014-2024" }
                 ]}
-                color="bg-yellow-50 border-yellow-200"
+                color=" border-yellow-200"
                 iconColor="text-yellow-600"
               />
 
               {/* Disability Rights Awareness */}
               <ProgramCard
                 icon={<Lightbulb size={32} />}
-                title="🧠 Disability Rights Awareness"
+                title="Disability Rights Awareness"
                 description="From 2022 to 2025, we have been conducting disability rights awareness programs to educate communities and promote inclusive practices."
                 stats={[
                   { label: "Programs", value: "50+" },
                   { label: "Duration", value: "3+ Years" },
                   { label: "Period", value: "2022-2025" }
                 ]}
-                color="bg-pink-50 border-pink-200"
+                color=" border-pink-200"
                 iconColor="text-pink-600"
               />
 
@@ -323,6 +342,7 @@ const ProgramsPage = () => {
             
             <div className="mt-12 text-center">
                 <div className="flex justify-center">
+                <Link to="/donate">
                 <Button 
                   variant="primary" 
                   size="lg"
@@ -331,6 +351,7 @@ const ProgramsPage = () => {
                   <Heart size={18} />
                   <span>Support Our Programs</span>
                 </Button>
+                </Link>
                 </div>
             </div>
           </div>

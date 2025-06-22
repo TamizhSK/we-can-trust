@@ -64,25 +64,43 @@ const ContactPage = () => {
     <div className="pb-16">
       {/* Creative Header */}
       <div className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 py-40 relative overflow-hidden">
-        {/* Animated background elements */}
-        <div className="absolute inset-0">
-          <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full animate-pulse"></div>
-          <div className="absolute top-32 right-20 w-16 h-16 bg-accent-400/20 rounded-full animate-bounce"></div>
-          <div className="absolute bottom-20 left-1/4 w-12 h-12 bg-secondary-400/30 rounded-full animate-pulse"></div>
-          <div className="absolute bottom-32 right-1/3 w-24 h-24 bg-white/5 rounded-full animate-bounce"></div>
-        </div>
-        
-        {/* Decorative pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <defs>
-              <pattern id="grid-contact" width="10" height="10" patternUnits="userSpaceOnUse">
-                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" strokeWidth="0.5"/>
-              </pattern>
-            </defs>
-            <rect width="100" height="100" fill="url(#grid-contact)" />
-          </svg>
-        </div>
+    <div className="absolute inset-0 z-0">
+      {/* Animated blurred gradient background with amber blobs */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div
+          className="absolute inset-0 w-full h-full"
+            style={{
+            backgroundImage: 
+              'radial-gradient(circle at 20% 30%, rgba(255, 235, 59, 0.7) 0%, transparent 50%), ' +
+              'radial-gradient(circle at 80% 50%, rgba(76, 175, 80, 0.6) 0%, transparent 50%), ' +
+              'radial-gradient(circle at 50% 80%, rgba(255, 152, 0, 0.5) 0%, transparent 50%)',
+            backgroundSize: '200% 200%',
+            animation: 'animatedGradient 16s ease-in-out infinite',
+            filter: 'blur(60px)',
+            opacity: 0.7,
+          }}
+        />
+      </div>
+
+      {/* Optional: Decorative grid pattern on top */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
+        <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <defs>
+            <pattern id="grid-hero" width="8" height="8" patternUnits="userSpaceOnUse">
+              <path d="M 8 0 L 0 0 0 8" fill="none" stroke="currentColor" strokeWidth="0.3" />
+              <circle cx="0" cy="0" r="0.5" fill="currentColor" opacity="0.3" />
+            </pattern>
+            <linearGradient id="gridGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="white" stopOpacity="0.8" />
+              <stop offset="50%" stopColor="white" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="white" stopOpacity="0.1" />
+            </linearGradient>
+          </defs>
+          <rect width="100" height="100" fill="url(#grid-hero)" stroke="url(#gridGradient)" />
+        </svg>
+      </div>
+    </div>
+
         
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
@@ -128,7 +146,7 @@ const ContactPage = () => {
       <section className="py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 px-4 sm:px-0  ">
               {/* Contact Information */}
               <div className="lg:col-span-1">
                 <h2 className="text-2xl font-display font-bold text-gray-900 mb-6">Get In Touch</h2>
@@ -149,7 +167,7 @@ const ContactPage = () => {
                   <ContactInfo 
                     icon={<Mail size={24} />} 
                     title="Email Address" 
-                    content={<>info@wecantrustyou.org<br />support@wecantrustyou.org</>} 
+                    content={<>info@wecantrust.org<br />support@wecantrust.org</>} 
                   />
                   
                   <ContactInfo 
@@ -250,29 +268,30 @@ const ContactPage = () => {
                         ></textarea>
                       </div>
                       
-                      <div className="flex justify-end">
-                        <Button 
-                          type="submit" 
-                          variant="primary" 
-                          size="lg" 
-                          disabled={isSubmitting}
-                        >
-                          {isSubmitting ? (
-                            <>
-                              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                              </svg>
-                              Sending...
-                            </>
-                          ) : (
-                            <>
-                              <Send size={18} className="mr-2" />
-                              Send Message
-                            </>
-                          )}
-                        </Button>
-                      </div>
+                    <div className="flex justify-end">
+                      <Button 
+                        type="submit" 
+                        variant="primary" 
+                        size="lg" 
+                        disabled={isSubmitting}
+                        className='flex items-center gap-2'
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Sending...
+                          </>
+                        ) : (
+                          <>
+                            <Send size={18}/>
+                            Send Message
+                          </>
+                        )}
+                      </Button>
+                    </div>
                     </form>
                   )}
                 </Card>
@@ -283,18 +302,33 @@ const ContactPage = () => {
       </section>
       
       {/* Google Map */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 px-4 sm:px-0 bg-gray-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-6xl mx-auto">
             <div className="aspect-w-16 aspect-h-9">
-              <div className="w-full h-[400px] rounded-lg overflow-hidden shadow-md">
-                {/* This is a placeholder for a Google Map - in a real implementation, you would use the Google Maps API */}
-                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                  <div className="text-center">
-                    <MapPin size={48} className="mx-auto text-primary-500 mb-4" />
-                    <p className="text-gray-600">Map would be displayed here</p>
+              <div className="w-full h-[400px] rounded-lg overflow-hidden shadow-md relative">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d248755.79476706282!2d80.04386385016383!3d13.047807806714815!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a5265ea4f7d3361%3A0x6e61a70b6863d433!2sChennai%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1750588883711!5m2!1sen!2sin"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Our Location"
+                  onLoad={() => console.log('Map loaded')}
+                  onError={() => console.log('Map failed to load')}
+                ></iframe>
+                
+                {/* Fallback content in case iframe fails */}
+                <noscript>
+                  <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
+                    <div className="text-center">
+                      <MapPin size={48} className="mx-auto text-primary-500 mb-4" />
+                      <p className="text-gray-600">Please enable JavaScript to view the map</p>
+                    </div>
                   </div>
-                </div>
+                </noscript>
               </div>
             </div>
           </div>

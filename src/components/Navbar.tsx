@@ -59,15 +59,6 @@ const Navbar = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <NavLink to="/" className="flex items-center space-x-2">
-            <div className={`h-10 w-10 rounded-md flex items-center justify-center ${
-              isScrolled ? 'bg-primary-100' : 'bg-white/20'
-            }`}>
-              <span className={`text-xl font-bold ${
-                isScrolled ? 'text-primary-600' : 'text-white'
-              }`}>
-                😊
-              </span>
-            </div>
             <span className={`text-xl font-display font-semibold transition-colors duration-200 ${
               isScrolled ? 'text-primary-600' : 'text-white'
             }`}>
