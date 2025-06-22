@@ -155,12 +155,12 @@ const ProgramsPage = () => {
                 <div className="text-center mb-12">
                   <div className="inline-flex items-center bg-primary-100 text-primary-700 px-6 py-3 rounded-full mb-6">
                     <Users size={24} className="mr-3" />
-                    <span className="font-semibold text-lg">Featured Program</span>
+                    <span className="font-semibold text-md sm:text-lg ">Featured Program</span>
                   </div>
-                  <h2 className="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-6">
+                  <h2 className="text-3xl sm:text-5xl font-display font-bold text-gray-900 mb-6">
                     Tailoring Training Program
                   </h2>
-                  <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+                  <p className="text-md sm:text-center sm:text-xl text-gray-600 max-w-4xl mx-auto text-justify px-3 sm:px-0">
                     From 2007 to 2014, our flagship tailoring and garment-making training program became a beacon of hope 
                     for rural women, transforming 1,200 lives by providing not just skills, but pathways to economic independence 
                     and community leadership.
@@ -191,93 +191,93 @@ const ProgramsPage = () => {
             </div>
 
             {/* Other Programs Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-              
-              {/* Environmental Initiatives */}
-              <ProgramCard
-                icon={<TreePine size={32} />}
-                title="Environmental Initiatives"
-                description="In 2012, we planted 500 trees in colleges and schools across Chennai, creating green spaces and promoting environmental awareness among students and communities."
-                stats={[
-                  { label: "Trees Planted", value: "500" },
-                  { label: "Institutions", value: "25+" },
-                  { label: "Year", value: "2012" }
-                ]}
-                color=" border-green-200"
-                iconColor="text-green-600"
-              />
+           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12 lg:mb-16">
+  
+            {/* Environmental Initiatives */}
+            <ProgramCard
+              icon={<TreePine size={32} />}
+              title="Environmental Initiatives"
+              description="In 2012, we planted 500 trees in colleges and schools across Chennai, creating green spaces and promoting environmental awareness among students and communities."
+              stats={[
+                { label: "Trees Planted", value: "500" },
+                { label: "Institutions", value: "25+" },
+                { label: "Year", value: "2012" }
+              ]}
+              color="border-green-200"
+              iconColor="text-green-600"
+            />
 
-              {/* Bicycle Assembly Training */}
-              <ProgramCard
-                icon={<Bike size={32} />}
-                title="Bicycle Assembly Training"
-                description="In collaboration with TI Cycles, we provided specialized bicycle repair and assembly training to 25 differently-abled persons, opening new employment opportunities."
-                stats={[
-                  { label: "Trainees", value: "25" },
-                  { label: "Partner", value: "TI Cycles" },
-                  { label: "Skills", value: "Assembly & Repair" }
-                ]}
-                color=" border-blue-200"
-                iconColor="text-blue-600"
-              />
+            {/* Bicycle Assembly Training */}
+            <ProgramCard
+              icon={<Bike size={32} />}
+              title="Bicycle Assembly Training"
+              description="In collaboration with TI Cycles, we provided specialized bicycle repair and assembly training to 25 differently-abled persons, opening new employment opportunities."
+              stats={[
+                { label: "Trainees", value: "25" },
+                { label: "Partner", value: "TI Cycles" },
+                { label: "Skills", value: "Assembly" }
+              ]}
+              color="border-blue-200"
+              iconColor="text-blue-600"
+            />
 
-              {/* Legal Advocacy */}
-              <ProgramCard
-                icon={<Scale size={32} />}
-                title="Legal Advocacy"
-                description="In 2013, we filed a Public Interest Litigation in Chennai High Court, resulting in a landmark judgment that secured Group 4 government jobs for 636 differently-abled persons."
-                stats={[
-                  { label: "Jobs Secured", value: "636" },
-                  { label: "Court", value: "Chennai HC" },
-                  { label: "Year", value: "2013" }
-                ]}
-                color="border-purple-200"
-                iconColor="text-purple-600"
-              />
+            {/* Legal Advocacy */}
+            <ProgramCard
+              icon={<Scale size={32} />}
+              title="Legal Advocacy"
+              description="In 2013, we filed a Public Interest Litigation in Chennai High Court, resulting in a landmark judgment that secured Group 4 government jobs for 636 differently-abled persons."
+              stats={[
+                { label: "Jobs Secured", value: "636" },
+                { label: "High Court", value: "Chennai" },
+                { label: "Year", value: "2013" }
+              ]}
+              color="border-purple-200"
+              iconColor="text-purple-600"
+            />
 
-              {/* Digital Literacy */}
-              <ProgramCard
-                icon={<Monitor size={32} />}
-                title="Digital Literacy & Entrepreneurship"
-                description="In 2014, we conducted computer training programs along with MSME entrepreneurship development for 250 students, bridging the digital divide."
-                stats={[
-                  { label: "Students", value: "250" },
-                  { label: "Skills", value: "IT + Business" },
-                  { label: "Year", value: "2014" }
-                ]}
-                color=" border-indigo-200"
-                iconColor="text-indigo-600"
-              />
+            {/* Digital Literacy */}
+            <ProgramCard
+              icon={<Monitor size={32} />}
+              title="Digital Literacy & Entrepreneurship"
+              description="In 2014, we conducted computer training programs along with MSME entrepreneurship development for 250 students, bridging the digital divide."
+              stats={[
+                { label: "Students", value: "250" },
+                { label: "Skills", value: "Business" },
+                { label: "Year", value: "2014" }
+              ]}
+              color="border-indigo-200"
+              iconColor="text-indigo-600"
+            />
 
-              {/* Career Guidance */}
-              <ProgramCard
-                icon={<GraduationCap size={32} />}
-                title="Career Guidance Program"
-                description="From 2014 to 2024, we provided comprehensive career counseling and guidance to 600 PWD and underprivileged students, helping them navigate their professional journeys."
-                stats={[
-                  { label: "Students Guided", value: "600" },
-                  { label: "Duration", value: "10 Years" },
-                  { label: "Period", value: "2014-2024" }
-                ]}
-                color=" border-yellow-200"
-                iconColor="text-yellow-600"
-              />
+            {/* Career Guidance */}
+            <ProgramCard
+              icon={<GraduationCap size={32} />}
+              title="Career Guidance Program"
+              description="From 2014 to 2024, we provided comprehensive career counseling and guidance to 600 PWD and underprivileged students, helping them navigate their professional journeys."
+              stats={[
+                { label: "Students Guided", value: "600" },
+                { label: "Duration", value: "10 Years" },
+                { label: "Since", value: "2014"}
+              ]}
+              color="border-yellow-200"
+              iconColor="text-yellow-600"
+            />
 
-              {/* Disability Rights Awareness */}
-              <ProgramCard
-                icon={<Lightbulb size={32} />}
-                title="Disability Rights Awareness"
-                description="From 2022 to 2025, we have been conducting disability rights awareness programs to educate communities and promote inclusive practices."
-                stats={[
-                  { label: "Programs", value: "50+" },
-                  { label: "Duration", value: "3+ Years" },
-                  { label: "Period", value: "2022-2025" }
-                ]}
-                color=" border-pink-200"
-                iconColor="text-pink-600"
-              />
+            {/* Disability Rights Awareness */}
+            <ProgramCard
+              icon={<Lightbulb size={32} />}
+              title="Disability Rights Awareness"
+              description="From 2022 to 2025, we have been conducting disability rights awareness programs to educate communities and promote inclusive practices."
+              stats={[
+                { label: "Programs", value: "50+" },
+                { label: "Duration", value: "3+ Years" },
+                { label: "Since", value: "2022" }
+              ]}
+              color="border-pink-200"
+              iconColor="text-pink-600"
+            />
 
-            </div>
+          </div>
 
             {/* Additional Services */}
             <div className="bg-gray-50 rounded-2xl p-8 mb-16">
@@ -336,7 +336,7 @@ const ProgramsPage = () => {
                 title="Legal Advocacy Follow-up"
                 description="Following up on PIL cases in Supreme Court and High Court to ensure implementation of PWD job reservations"
                 icon={<Scale size={24} />}
-                status="In Progress"
+                status="Ongoing"
               />
             </div>
             
@@ -419,7 +419,7 @@ const OngoingProject = ({ title, description, icon, status }: OngoingProjectProp
         </div>
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
-          <span className="px-2 py-1 bg-primary-100 text-primary-700 text-xs rounded-full font-medium">
+          <span className="px-1 py-1 bg-primary-100 text-primary-700 text-xs rounded-full font-medium">
             {status}
           </span>
         </div>
