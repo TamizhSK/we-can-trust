@@ -6,6 +6,7 @@ import AboutPage from './pages/AboutPage';
 import DonatePage from './pages/DonatePage';
 import ProgramsPage from './pages/ProgramsPage';
 import ContactPage from './pages/ContactPage';
+import ReceiptVerificationPage from './pages/ReceiptVerificationPage';  
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/programs" element={<ProgramsPage />} />
           <Route path="/donate" element={<DonatePage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/verify-receipt" element={<ReceiptVerificationPage />} />
         </Routes>
       </main>
       <Footer />
