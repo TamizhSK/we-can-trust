@@ -7,11 +7,15 @@ const path = require("path");
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 
+// Import receipt and email utilities
+const ReceiptGenerator = require("./utils/receiptGenerator");
+const EmailService = require("./utils/emailService");
+
 require("dotenv").config();
 mongoose.connect(process.env.MONGO_URI);
 
 // Models
-const Donation = require("./models/donation");
+const Donation = require("./models/donation").default;
 const Contact = require("./models/contact");
 
 // Razorpay instance
@@ -19,6 +23,10 @@ const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
+
+// Initialize receipt generator and email service
+const receiptGenerator = new ReceiptGenerator();
+const emailService = new EmailService();
 
 const app = express();
 
@@ -31,6 +39,10 @@ app.use(cors({
 // Body parsing middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+// Static files for receipts (with authentication)
+app.use('/receipts', express.static(path.join(__dirname, 'receipts')));
+
 // Session configuration
 app.use(
   session({ 
@@ -157,7 +169,15 @@ app.get("/api/donations/razorpay-config", (req, res) => {
 
 app.post("/api/donations/create-order", async (req, res) => {
   try {
-    const { amount, donorName, donorEmail, purpose } = req.body;
+    const { 
+      amount, 
+      donorName, 
+      donorEmail, 
+      donorPhone, 
+      donorAddress, 
+      donorPAN, 
+      purpose 
+    } = req.body;
     
     // Validation
     if (!amount || !donorName || !donorEmail) {
@@ -182,10 +202,13 @@ app.post("/api/donations/create-order", async (req, res) => {
 
     const order = await razorpay.orders.create(options);
 
-    // Save donation details
+    // Save donation
     const donation = new Donation({
       donorName,
       donorEmail,
+      donorPhone: donorPhone || "",
+      donorAddress: donorAddress || "",
+      donorPAN: donorPAN || "",
       amount,
       razorpayOrderId: order.id,
       purpose: purpose || "General Donation",
@@ -222,18 +245,30 @@ app.post("/api/donations/verify-payment", async (req, res) => {
       .update(sign.toString())
       .digest("hex");
 
+    const year = new Date().getFullYear();
+    const shortId = donationId.toString().slice(-6);
+    const receiptNumber = `RCT-${year}-${shortId}`;
+
     if (razorpay_signature === expectedSign) {
       // Update donation status
-      await Donation.findByIdAndUpdate(donationId, {
+      const donation = await Donation.findByIdAndUpdate(donationId, {
         razorpayPaymentId: razorpay_payment_id,
         razorpaySignature: razorpay_signature,
         status: "completed",
-      });
+        receiptNumber: receiptNumber,
+        financialYear: `${year}-${year + 1}`,
+      }, { new: true });
+
+      if (donation) {
+        // Generate receipt in background
+        generateReceiptAsync(donation, req.get('host'));
+      }
 
       res.json({ 
         success: true, 
         message: "Payment verified successfully",
-        donationId: donationId 
+        donationId: donationId,
+        receiptNumber: donation.receiptNumber
       });
     } else {
       await Donation.findByIdAndUpdate(donationId, { status: "failed" });
@@ -250,6 +285,43 @@ app.post("/api/donations/verify-payment", async (req, res) => {
     });
   }
 });
+
+// Async function to generate and send receipt
+async function generateReceiptAsync(donation, host) {
+  try {
+    const baseUrl = `http://${host}`;
+    
+    // Generate receipt PDF
+    const receiptResult = await receiptGenerator.generateReceipt(donation, baseUrl);
+    
+    if (receiptResult.success) {
+      // Update donation with receipt information
+      await Donation.findByIdAndUpdate(donation._id, {
+        receiptGenerated: true,
+        receiptGeneratedAt: new Date(),
+        receiptPath: receiptResult.filePath,
+        receiptHash: receiptResult.verificationHash
+      });
+
+      // Send receipt via email
+      const emailResult = await emailService.sendReceiptEmail(
+        donation, 
+        receiptResult.filePath, 
+        receiptGenerator.organizationDetails
+      );
+
+      if (emailResult.success) {
+        console.log(`Receipt sent successfully to ${donation.donorEmail} for donation ${donation.receiptNumber}`);
+      } else {
+        console.error(`Failed to send receipt email for donation ${donation.receiptNumber}:`, emailResult.error);
+      }
+    } else {
+      console.error(`Failed to generate receipt for donation ${donation._id}:`, receiptResult.error);
+    }
+  } catch (error) {
+    console.error("Error in receipt generation process:", error);
+  }
+}
 
 app.get("/api/donations/:id", async (req, res) => {
   try {
@@ -317,6 +389,238 @@ app.get("/api/donations/user/my-donations", async (req, res) => {
     res.status(500).json({ 
       success: false, 
       message: "Error loading donations" 
+    });
+  }
+});
+
+// Receipt management routes
+
+// Download receipt PDF
+app.get("/api/receipts/download/:receiptNumber", async (req, res) => {
+  try {
+    const { receiptNumber } = req.params;
+    
+    const donation = await Donation.findOne({ 
+      receiptNumber, 
+      status: "completed",
+      receiptGenerated: true 
+    });
+    
+    if (!donation) {
+      return res.status(404).json({
+        success: false,
+        message: "Receipt not found"
+      });
+    }
+    
+    // Check if file exists
+    const fs = require('fs');
+    if (!fs.existsSync(donation.receiptPath)) {
+      return res.status(404).json({
+        success: false,
+        message: "Receipt file not found"
+      });
+    }
+    
+    // Set headers for PDF download
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="Receipt-${receiptNumber}.pdf"`);
+    
+    // Stream the file
+    const fileStream = fs.createReadStream(donation.receiptPath);
+    fileStream.pipe(res);
+    
+  } catch (error) {
+    console.error("Error downloading receipt:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error downloading receipt"
+    });
+  }
+});
+
+// Verify receipt authenticity
+app.get("/api/receipts/verify/:receiptNumber", async (req, res) => {
+  try {
+    const { receiptNumber } = req.params;
+    const { hash } = req.query;
+    
+    const donation = await Donation.findOne({ 
+      receiptNumber, 
+      status: "completed" 
+    });
+    
+    if (!donation) {
+      return res.status(404).json({
+        success: false,
+        message: "Receipt not found"
+      });
+    }
+    
+    // Verify hash if provided
+    let isValid = true;
+    if (hash) {
+      isValid = receiptGenerator.verifyReceipt(donation, hash);
+    }
+    
+    res.json({
+      success: true,
+      valid: isValid,
+      receipt: {
+        receiptNumber: donation.receiptNumber,
+        donorName: donation.donorName,
+        amount: donation.amount,
+        currency: donation.currency,
+        purpose: donation.purpose,
+        donationDate: donation.createdAt,
+        financialYear: donation.financialYear,
+        organizationName: receiptGenerator.organizationDetails.name,
+        section80G: receiptGenerator.organizationDetails.section80G
+      }
+    });
+    
+  } catch (error) {
+    console.error("Error verifying receipt:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error verifying receipt"
+    });
+  }
+});
+
+// Regenerate receipt (admin function)
+app.post("/api/receipts/regenerate/:donationId", async (req, res) => {
+  // Add authentication check for admin users here
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: "Authentication required"
+    });
+  }
+  
+  try {
+    const { donationId } = req.params;
+    
+    const donation = await Donation.findById(donationId);
+    
+    if (!donation || donation.status !== "completed") {
+      return res.status(404).json({
+        success: false,
+        message: "Completed donation not found"
+      });
+    }
+    
+    const baseUrl = `http://${req.get('host')}`;
+    
+    // Generate new receipt
+    const receiptResult = await receiptGenerator.generateReceipt(donation, baseUrl);
+    
+    if (receiptResult.success) {
+      // Update donation with new receipt information
+      await Donation.findByIdAndUpdate(donation._id, {
+        receiptGenerated: true,
+        receiptGeneratedAt: new Date(),
+        receiptPath: receiptResult.filePath,
+        receiptHash: receiptResult.verificationHash
+      });
+
+      // Optionally send receipt via email again
+      if (req.body.sendEmail) {
+        const emailResult = await emailService.sendReceiptEmail(
+          donation, 
+          receiptResult.filePath, 
+          receiptGenerator.organizationDetails
+        );
+        
+        return res.json({
+          success: true,
+          message: "Receipt regenerated and sent successfully",
+          receiptNumber: donation.receiptNumber,
+          emailSent: emailResult.success
+        });
+      }
+      
+      res.json({
+        success: true,
+        message: "Receipt regenerated successfully",
+        receiptNumber: donation.receiptNumber
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Failed to regenerate receipt",
+        error: receiptResult.error
+      });
+    }
+    
+  } catch (error) {
+    console.error("Error regenerating receipt:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error regenerating receipt"
+    });
+  }
+});
+
+// Resend receipt email
+app.post("/api/receipts/resend/:receiptNumber", async (req, res) => {
+  try {
+    const { receiptNumber } = req.params;
+    const { email } = req.body; // Optional: send to different email
+    
+    const donation = await Donation.findOne({ 
+      receiptNumber, 
+      status: "completed",
+      receiptGenerated: true 
+    });
+    
+    if (!donation) {
+      return res.status(404).json({
+        success: false,
+        message: "Receipt not found"
+      });
+    }
+    
+    // Check if receipt file exists
+    const fs = require('fs');
+    if (!fs.existsSync(donation.receiptPath)) {
+      return res.status(404).json({
+        success: false,
+        message: "Receipt file not found. Please regenerate receipt."
+      });
+    }
+    
+    // Use provided email or original donor email
+    const targetEmail = email || donation.donorEmail;
+    
+    // Create a copy of donation with target email for sending
+    const donationForEmail = { ...donation.toObject(), donorEmail: targetEmail };
+    
+    const emailResult = await emailService.sendReceiptEmail(
+      donationForEmail, 
+      donation.receiptPath, 
+      receiptGenerator.organizationDetails
+    );
+    
+    if (emailResult.success) {
+      res.json({
+        success: true,
+        message: `Receipt sent successfully to ${targetEmail}`,
+        messageId: emailResult.messageId
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Failed to send receipt email",
+        error: emailResult.error
+      });
+    }
+    
+  } catch (error) {
+    console.error("Error resending receipt:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error resending receipt"
     });
   }
 });

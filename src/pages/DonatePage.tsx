@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { CreditCard, Heart, Users, GraduationCap, Lightbulb } from 'lucide-react';
+import { CreditCard, Heart, Users, GraduationCap, Lightbulb, Download, CheckCircle } from 'lucide-react';
 import Button from '../components/Button';
 import Card from '../components/Card';
 
@@ -21,10 +21,18 @@ const DonatePage = () => {
   const [amount, setAmount] = useState<number | ''>('');
   const [donorName, setDonorName] = useState<string>('');
   const [donorEmail, setDonorEmail] = useState<string>('');
+  const [donorPhone, setDonorPhone] = useState<string>('');
+  const [donorAddress, setDonorAddress] = useState<string>('');
+  const [donorPAN, setDonorPAN] = useState<string>('');
   const [donationType, setDonationType] = useState<string>('general');
-  const [isRecurring, setIsRecurring] = useState<boolean>(false);
+  const [wantsTaxBenefit, setWantsTaxBenefit] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [razorpayKey, setRazorpayKey] = useState<string>('');
+  const [donationSuccess, setDonationSuccess] = useState<{
+    show: boolean;
+    receiptNumber?: string;
+    amount?: number;
+  }>({ show: false });
 
   const apiUri = import.meta.env.VITE_API_URI || "http://localhost:8000";
 
@@ -54,7 +62,9 @@ const DonatePage = () => {
 
     loadRazorpay();
     fetchRazorpayConfig();
-  }, [apiUri]);  const handleAmountClick = (value: number) => {
+  }, [apiUri]);
+
+  const handleAmountClick = (value: number) => {
     setAmount(value);
   };
 
@@ -75,9 +85,40 @@ const DonatePage = () => {
     return purposes[type as keyof typeof purposes] || 'General Support';
   };
 
+  const downloadReceipt = async (receiptNumber: string) => {
+    try {
+      const response = await fetch(`${apiUri}/api/receipts/download/${receiptNumber}`, {
+        credentials: 'include'
+      });
+      
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Receipt-${receiptNumber}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      } else {
+        alert('Failed to download receipt. Please try again later.');
+      }
+    } catch (error) {
+      console.error('Error downloading receipt:', error);
+      alert('Failed to download receipt. Please try again later.');
+    }
+  };
+
   const handleDonate = async () => {
     if (!amount || !donorName || !donorEmail) {
       alert('Please fill in all required fields');
+      return;
+    }
+
+    // Validate PAN if tax benefit is requested
+    if (wantsTaxBenefit && !donorPAN) {
+      alert('PAN number is required for tax exemption under Section 80G');
       return;
     }
 
@@ -100,6 +141,9 @@ const DonatePage = () => {
           amount: Number(amount),
           donorName,
           donorEmail,
+          donorPhone: wantsTaxBenefit ? donorPhone : '',
+          donorAddress: wantsTaxBenefit ? donorAddress : '',
+          donorPAN: wantsTaxBenefit ? donorPAN : '',
           purpose: getPurposeText(donationType)
         })
       });
@@ -138,13 +182,21 @@ const DonatePage = () => {
             const verifyData = await verifyResponse.json();
 
             if (verifyData.success) {
-              alert('Thank you for your donation! Payment successful.');
+              setDonationSuccess({
+                show: true,
+                receiptNumber: verifyData.receiptNumber,
+                amount: Number(amount)
+              });
+              
               // Reset form
               setAmount('');
               setDonorName('');
               setDonorEmail('');
+              setDonorPhone('');
+              setDonorAddress('');
+              setDonorPAN('');
               setDonationType('general');
-              setIsRecurring(false);
+              setWantsTaxBenefit(false);
             } else {
               alert('Payment verification failed. Please contact support.');
             }
@@ -157,7 +209,8 @@ const DonatePage = () => {
         },
         prefill: {
           name: donorName,
-          email: donorEmail
+          email: donorEmail,
+          contact: donorPhone
         },
         theme: {
           color: '#0066cc'
@@ -179,30 +232,82 @@ const DonatePage = () => {
     }
   };
 
+  if (donationSuccess.show) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center"
+        >
+          <div className="mb-6">
+            <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">Thank You!</h2>
+            <p className="text-gray-600">Your donation has been processed successfully.</p>
+          </div>
+          
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+            <p className="text-lg font-semibold text-green-800">
+              ₹{donationSuccess.amount?.toLocaleString('en-IN')} Donated
+            </p>
+            {donationSuccess.receiptNumber && (
+              <p className="text-sm text-green-600 mt-1">
+                Receipt #{donationSuccess.receiptNumber}
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-4">
+            <p className="text-sm text-gray-600">
+              A receipt with tax exemption certificate has been sent to your email address.
+            </p>
+            
+            {donationSuccess.receiptNumber && (
+              <Button
+                onClick={() => downloadReceipt(donationSuccess.receiptNumber!)}
+                className="w-full flex items-center justify-center space-x-2"
+              >
+                <Download className="w-4 h-4" />
+                <span>Download Receipt</span>
+              </Button>
+            )}
+            
+            <Button
+              variant="outline"
+              onClick={() => setDonationSuccess({ show: false })}
+              className="w-full"
+            >
+              Make Another Donation
+            </Button>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="pb-16">
       {/* Creative Header */}
       <div className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 py-40 relative overflow-hidden">
-    <div className="absolute inset-0 z-0">
-      {/* Animated blurred gradient background with amber blobs */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div
-          className="absolute inset-0 w-full h-full"
-            style={{
-            backgroundImage: 
-              'radial-gradient(circle at 20% 30%, rgba(255, 235, 59, 0.7) 0%, transparent 50%), ' +
-              'radial-gradient(circle at 80% 50%, rgba(76, 175, 80, 0.6) 0%, transparent 50%), ' +
-              'radial-gradient(circle at 50% 80%, rgba(255, 152, 0, 0.5) 0%, transparent 50%)',
-            backgroundSize: '200% 200%',
-            animation: 'animatedGradient 16s ease-in-out infinite',
-            filter: 'blur(60px)',
-            opacity: 0.7,
-          }}
-        />
-      </div>
+        <div className="absolute inset-0 z-0">
+          {/* Animated blurred gradient background with amber blobs */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div
+              className="absolute inset-0 w-full h-full"
+              style={{
+                backgroundImage: 
+                  'radial-gradient(circle at 20% 30%, rgba(255, 235, 59, 0.7) 0%, transparent 50%), ' +
+                  'radial-gradient(circle at 80% 50%, rgba(76, 175, 80, 0.6) 0%, transparent 50%), ' +
+                  'radial-gradient(circle at 50% 80%, rgba(255, 152, 0, 0.5) 0%, transparent 50%)',
+                backgroundSize: '200% 200%',
+                animation: 'animatedGradient 16s ease-in-out infinite',
+                filter: 'blur(60px)',
+                opacity: 0.7,
+              }}
+            />
+          </div>
+        </div>
 
-      {/* Optional: Decorative grid pattern on top */}
       <div className="absolute inset-0 opacity-10 pointer-events-none">
         <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
           <defs>
@@ -218,272 +323,175 @@ const DonatePage = () => {
           </defs>
           <rect width="100" height="100" fill="url(#grid-hero)" stroke="url(#gridGradient)" />
         </svg>
-      </div>
-    </div>
+      </div>     
 
-        
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: -30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <div className="flex justify-center mb-6">
-                <div className="flex items-center space-x-4 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3">
-                  <Heart className="text-accent-400" size={24} />
-                  <span className="text-white font-medium">Make a Difference</span>
-                  <Heart className="text-accent-400" size={24} />
-                </div>
-              </div>
-              
-              <h1 className="text-5xl md:text-7xl font-display font-bold text-white mb-6 leading-tight">
-                Make a <span className="text-accent-400">Donation</span>
-              </h1>
-              
-              <p className="text-xl md:text-2xl text-primary-100 max-w-3xl mx-auto leading-relaxed">
-                Your contribution helps us empower people with disabilities, provide training programs, 
-                and create lasting change in communities across India
-              </p>
-              
-              <div className="mt-10 flex flex-wrap justify-center gap-4">
-                <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 text-white">
-                  <span className="font-bold text-accent-400">₹500</span> Trains 1 Person
-                </div>
-                <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 text-white">
-                  <span className="font-bold text-accent-400">₹1000</span> Digital Literacy
-                </div>
-                <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 text-white">
-                  <span className="font-bold text-accent-400">₹2500</span> Legal Support
-                </div>
-              </div>
-            </motion.div>
-          </div>
+        <div className="relative z-10 container mx-auto px-6 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
+              Make a <span className="text-amber-300">Difference</span>
+            </h1>
+            <p className="text-xl text-white/90 max-w-2xl mx-auto leading-relaxed">
+              Your generosity creates ripples of hope and change in communities that need it most.
+            </p>
+          </motion.div>
         </div>
       </div>
 
       {/* Donation Form */}
-      <section className="py-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Donation Form */}
-              <div className="md:col-span-2">
-                <Card className="p-8">
-                  <h2 className="text-2xl font-semibold text-gray-900 mb-6">Your Donation</h2>
-
-                  <div className='mb-8'>
-                    <h3 className="text-lg font-medium text-gray-800 mb-3">Donor Information:</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
-                        <input
-                          type="text"
-                          value={donorName}
-                          onChange={(e) => setDonorName(e.target.value)}
-                          placeholder="Enter your name"
-                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-300 focus:border-primary-400 outline-none transition-colors"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
-                        <input
-                          type="email"
-                          value={donorEmail}
-                          onChange={(e) => setDonorEmail(e.target.value)}
-                          placeholder="Enter your email"
-                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-300 focus:border-primary-400 outline-none transition-colors"
-                          required
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Donation Type */}
-                  <div className="mb-8">
-                    <h3 className="text-lg font-medium text-gray-800 mb-3">Select a cause:</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <button
-                        className={`p-4 rounded-lg border transition-colors ${
-                          donationType === 'general' 
-                            ? 'bg-primary-50 border-primary-500 text-primary-700' 
-                            : 'border-gray-300 hover:border-primary-300'
-                        }`}
-                        onClick={() => setDonationType('general')}
-                      >
-                        <Heart className="w-6 h-6 mx-auto mb-2 text-primary-500" />
-                        <div className="font-medium">General Support</div>
-                      </button>
-                      
-                      <button
-                        className={`p-4 rounded-lg border transition-colors ${
-                          donationType === 'education' 
-                            ? 'bg-primary-50 border-primary-500 text-primary-700' 
-                            : 'border-gray-300 hover:border-primary-300'
-                        }`}
-                        onClick={() => setDonationType('education')}
-                      >
-                        <GraduationCap className="w-6 h-6 mx-auto mb-2 text-primary-500" />
-                        <div className="font-medium">Education & Training</div>
-                      </button>
-                      
-                      <button
-                        className={`p-4 rounded-lg border transition-colors ${
-                          donationType === 'advocacy' 
-                            ? 'bg-primary-50 border-primary-500 text-primary-700' 
-                            : 'border-gray-300 hover:border-primary-300'
-                        }`}
-                        onClick={() => setDonationType('advocacy')}
-                      >
-                        <Lightbulb className="w-6 h-6 mx-auto mb-2 text-primary-500" />
-                        <div className="font-medium">Legal Advocacy</div>
-                      </button>
-                      
-                      <button
-                        className={`p-4 rounded-lg border transition-colors ${
-                          donationType === 'community' 
-                            ? 'bg-primary-50 border-primary-500 text-primary-700' 
-                            : 'border-gray-300 hover:border-primary-300'
-                        }`}
-                        onClick={() => setDonationType('community')}
-                      >
-                        <Users className="w-6 h-6 mx-auto mb-2 text-primary-500" />
-                        <div className="font-medium">Community Projects</div>
-                      </button>
-                    </div>
-                  </div>
-                  
-                  {/* Amount Selection */}
-                  <div className="mb-8">
-                    <h3 className="text-lg font-medium text-gray-800 mb-3">Select an amount:</h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-                      {[500, 1000, 2500, 5000].map((value) => (
-                        <button
-                          key={value}
-                          type="button"
-                          className={`py-3 rounded-lg border font-medium transition-colors ${
-                            amount === value 
-                              ? 'bg-primary-50 border-primary-500 text-primary-700' 
-                              : 'border-gray-300 hover:border-primary-300'
-                          }`}
-                          onClick={() => handleAmountClick(value)}
-                        >
-                          ₹{value}
-                        </button>
-                      ))}
-                    </div>
-                    
-                    <div className="relative">
-                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                        ₹
-                        </span>
-                      <input
-                        type="text"
-                        value={amount === '' ? '' : amount}
-                        onChange={handleCustomAmountChange}
-                        placeholder="Custom Amount"
-                        className="pl-10 pr-4 py-3 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-300 focus:border-primary-400 outline-none transition-colors"
-                      />
-                    </div>
-                  </div>
-                  
-                  {/* Donation Frequency */}
-                  <div className="mb-8">
-                    <h3 className="text-lg font-medium text-gray-800 mb-3">Donation frequency:</h3>
-                    <div className="flex gap-4">
-                      <button
-                        className={`flex-1 py-3 rounded-lg border font-medium transition-colors ${
-                          !isRecurring 
-                            ? 'bg-primary-50 border-primary-500 text-primary-700' 
-                            : 'border-gray-300 hover:border-primary-300'
-                        }`}
-                        onClick={() => setIsRecurring(false)}
-                      >
-                        One-time
-                      </button>
-                      <button
-                        className={`flex-1 py-3 rounded-lg border font-medium transition-colors ${
-                          isRecurring 
-                            ? 'bg-primary-50 border-primary-500 text-primary-700' 
-                            : 'border-gray-300 hover:border-primary-300'
-                        }`}
-                        onClick={() => setIsRecurring(true)}
-                      >
-                        Monthly
-                      </button>
-                    </div>
-                  </div>
-                  
-                  {/* Submit Button */}
-                    <Button
-                    variant="primary"
-                    fullWidth
-                    size="lg"
-                    onClick={handleDonate}
-                    disabled={!amount || !donorName || !donorEmail || isLoading}
-                    className="mt-4 flex items-center justify-center gap-2"
-                    >
-                    {isLoading ? (
-                      <>
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        <CreditCard size={18} />
-                        <span>
-                          Donate ₹{amount || 0}
-                        </span>
-                      </>
-                    )}
-                    </Button>
-                  
-                  <div className="mt-4 text-center text-sm text-gray-500">
-                    Secure payment powered by RazorPay
-                  </div>
-                </Card>
+      <div className="container mx-auto px-6 py-16">
+        <div className="max-w-4xl mx-auto">
+          <Card className="p-8">
+            <h2 className="text-3xl font-bold text-center mb-8">Support Our Mission</h2>
+            
+            {/* Amount Selection */}
+            <div className="mb-8">
+              <label className="block text-lg font-semibold mb-4">Select Amount</label>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                {[500, 1000, 2500, 5000].map((value) => (
+                  <button
+                    key={value}
+                    onClick={() => handleAmountClick(value)}
+                    className={`p-4 rounded-lg border-2 transition-all ${
+                      amount === value
+                        ? 'border-primary-500 bg-primary-50 text-primary-700'
+                        : 'border-gray-200 hover:border-primary-300'
+                    }`}
+                  >
+                    ₹{value.toLocaleString('en-IN')}
+                  </button>
+                ))}
               </div>
-              
-              {/* Side Information */}
-              <div>
-                <Card className="p-6 mb-6">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">How Your Donation Helps</h3>
-                  <ul className="space-y-3">
-                    <li className="flex">
-                      <span className="text-primary-500 mr-2">•</span>
-                      <span className="text-gray-600">₹500 can provide study materials for a student</span>
-                    </li>
-                    <li className="flex">
-                      <span className="text-primary-500 mr-2">•</span>
-                      <span className="text-gray-600">₹1,000 can fund digital literacy training for one person</span>
-                    </li>
-                    <li className="flex">
-                      <span className="text-primary-500 mr-2">•</span>
-                      <span className="text-gray-600">₹2,500 can support legal advocacy costs</span>
-                    </li>
-                    <li className="flex">
-                      <span className="text-primary-500 mr-2">•</span>
-                      <span className="text-gray-600">₹5,000 can help fund a diary unit for a visually impaired person</span>
-                    </li>
-                  </ul>
-                </Card>
-                
-                <Card className="p-6">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Tax Benefits</h3>
-                  <p className="text-gray-600 mb-4">
-                    Your donation is eligible for tax deduction under Section 80G of the Income Tax Act.
-                    We will provide a receipt for your donation.
-                  </p>
-                </Card>
+              <input
+                type="number"
+                placeholder="Enter custom amount"
+                value={amount}
+                onChange={handleCustomAmountChange}
+                className="w-full p-4 border-2 border-gray-200 rounded-lg focus:border-primary-500 focus:outline-none"
+              />
+            </div>
+
+            {/* Donation Purpose */}
+            <div className="mb-8">
+              <label className="block text-lg font-semibold mb-4">Purpose</label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[
+                  { id: 'general', icon: Heart, title: 'General Support' },
+                  { id: 'education', icon: GraduationCap, title: 'Education & Training' },
+                  { id: 'advocacy', icon: Lightbulb, title: 'Legal Advocacy' },
+                  { id: 'community', icon: Users, title: 'Community Projects' }
+                ].map(({ id, icon: Icon, title }) => (
+                  <button
+                    key={id}
+                    onClick={() => setDonationType(id)}
+                    className={`p-4 rounded-lg border-2 transition-all flex items-center space-x-3 ${
+                      donationType === id
+                        ? 'border-primary-500 bg-primary-50 text-primary-700'
+                        : 'border-gray-200 hover:border-primary-300'
+                    }`}
+                  >
+                    <Icon className="w-5 h-5" />
+                    <span>{title}</span>
+                  </button>
+                ))}
               </div>
             </div>
-          </div>
+
+            {/* Donor Information */}
+            <div className="mb-8">
+              <h3 className="text-xl font-semibold mb-4">Donor Information</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <input
+                  type="text"
+                  placeholder="Full Name *"
+                  value={donorName}
+                  onChange={(e) => setDonorName(e.target.value)}
+                  className="p-4 border-2 border-gray-200 rounded-lg focus:border-primary-500 focus:outline-none"
+                  required
+                />
+                <input
+                  type="email"
+                  placeholder="Email Address *"
+                  value={donorEmail}
+                  onChange={(e) => setDonorEmail(e.target.value)}
+                  className="p-4 border-2 border-gray-200 rounded-lg focus:border-primary-500 focus:outline-none"
+                  required
+                />
+              </div>
+              
+              {/* Tax Benefit Section */}
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+                <label className="flex items-center space-x-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={wantsTaxBenefit}
+                    onChange={(e) => setWantsTaxBenefit(e.target.checked)}
+                    className="w-4 h-4 text-primary-600"
+                  />
+                  <div>
+                    <span className="font-medium">I want tax exemption under Section 80G</span>
+                    <p className="text-sm text-gray-600">
+                      Provides tax deduction benefits. Requires additional information.
+                    </p>
+                  </div>
+                </label>
+              </div>
+
+              {wantsTaxBenefit && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="space-y-4"
+                >
+                  <input
+                    type="tel"
+                    placeholder="Phone Number"
+                    value={donorPhone}
+                    onChange={(e) => setDonorPhone(e.target.value)}
+                    className="w-full p-4 border-2 border-gray-200 rounded-lg focus:border-primary-500 focus:outline-none"
+                  />
+                  <textarea
+                    placeholder="Address"
+                    value={donorAddress}
+                    onChange={(e) => setDonorAddress(e.target.value)}
+                    rows={3}
+                    className="w-full p-4 border-2 border-gray-200 rounded-lg focus:border-primary-500 focus:outline-none"
+                  />
+                  <input
+                    type="text"
+                    placeholder="PAN Number (Required for tax exemption)"
+                    value={donorPAN}
+                    onChange={(e) => setDonorPAN(e.target.value.toUpperCase())}
+                    maxLength={10}
+                    className="w-full p-4 border-2 border-gray-200 rounded-lg focus:border-primary-500 focus:outline-none"
+                  />
+                </motion.div>
+              )}
+            </div>
+
+            {/* Donate Button */}
+            <Button
+              onClick={handleDonate}
+              disabled={isLoading || !amount || !donorName || !donorEmail}
+              className="w-full text-lg py-4 flex items-center justify-center space-x-2"
+            >
+              <CreditCard className="w-5 h-5" />
+              <span>
+                {isLoading ? 'Processing...' : `Donate ₹${amount ? Number(amount).toLocaleString('en-IN') : '0'}`}
+              </span>
+            </Button>
+
+            <p className="text-sm text-gray-500 text-center mt-4">
+              Your donation is secure and will be processed via Razorpay. 
+              You will receive a receipt with tax exemption certificate via email.
+            </p>
+          </Card>
         </div>
-      </section>
+      </div>
     </div>
   );
 };
