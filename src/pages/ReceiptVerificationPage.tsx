@@ -26,7 +26,7 @@ const ReceiptVerificationPage = () => {
     message?: string;
   } | null>(null);
 
-  const apiUri = import.meta.env.VITE_API_URI || "http://localhost:8000";
+  const apiUri = import.meta.env.VITE_API_URI;
 
   const handleVerify = async () => {
     if (!receiptNumber.trim()) {

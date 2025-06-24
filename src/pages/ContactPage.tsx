@@ -16,7 +16,7 @@ const ContactPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const apiUri = import.meta.env.API_URI as string || 'http://localhost:8000';
+  const apiUri = import.meta.env.VITE_API_URI;
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

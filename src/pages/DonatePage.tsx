@@ -34,7 +34,7 @@ const DonatePage = () => {
     amount?: number;
   }>({ show: false });
 
-  const apiUri = import.meta.env.VITE_API_URI || "http://localhost:8000";
+  const apiUri = import.meta.env.VITE_API_URI;
 
   // Load Razorpay script and get configuration
   useEffect(() => {
