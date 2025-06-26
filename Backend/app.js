@@ -32,7 +32,7 @@ const app = express();
 
 // CORS
 app.use(cors({
-  origin: process.env.FRONTEND_URI || "http://localhost:5173", // Default Vite port
+  origin: process.env.FRONTEND_URI, // Default Vite port
   credentials: true
 }));
 
@@ -142,7 +142,7 @@ app.get(
   passport.authenticate("google", { session: true }),
   (req, res) => {
     // Successful authentication, redirect to frontend
-    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    const frontendUrl = process.env.FRONTEND_URL;
     res.redirect(`${frontendUrl}/auth/success`);
   }
 );
