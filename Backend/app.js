@@ -31,10 +31,24 @@ const emailService = new EmailService();
 const app = express();
 
 // CORS
+
+const allowedOrigins = [
+  'https://we-can-trust-1-rho.vercel.app',
+  'https://we-can-trust-q78hiu7y0-dharshan-s-projects-bf4a856e.vercel.app',
+  'http://localhost:5173' // add this too for local testing
+];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URI, // Default Vite port
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
+
 
 // Body parsing middleware
 app.use(express.urlencoded({ extended: false }));
