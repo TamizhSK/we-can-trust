@@ -315,7 +315,7 @@ const ContactPage = () => {
             <div className="aspect-w-16 aspect-h-9">
               <div className="w-full h-[400px] rounded-lg overflow-hidden shadow-md relative">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d248755.79476706282!2d80.04386385016383!3d13.047807806714815!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a5265ea4f7d3361%3A0x6e61a70b6863d433!2sChennai%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1750588883711!5m2!1sen!2sin"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d62385.73472979925!2d79.02805307180343!3d12.240937611909336!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bacc0852cd3d6cd%3A0x74002b16e5bac856!2sTiruvannamalai%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1751067044404!5m2!1sen!2sin"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
