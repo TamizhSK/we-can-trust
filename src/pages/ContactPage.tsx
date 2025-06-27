@@ -3,8 +3,15 @@ import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock, Send, Heart } from 'lucide-react';
 import Button from '../components/Button';
 import Card from '../components/Card';
+import { useEffect } from 'react';
+
 
 const ContactPage = () => {
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',

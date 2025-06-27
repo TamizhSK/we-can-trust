@@ -15,8 +15,15 @@ import Card from '../components/Card';
 import Button from '../components/Button';
 import Carousel from '../components/Carousel';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+
+
 
 const ProgramsPage = () => {
+  
+    useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   // Tailoring program carousel data
   const tailoringCarouselItems = [
     {
@@ -405,7 +412,7 @@ interface OngoingProjectProps {
   status: string;
 }
 
-const OngoingProject = ({ title, description, icon, status }: OngoingProjectProps) => {
+const OngoingProject: React.FC<OngoingProjectProps> = ({ title, description, icon, status }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -418,8 +425,8 @@ const OngoingProject = ({ title, description, icon, status }: OngoingProjectProp
           {icon}
         </div>
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
-          <span className="px-1 py-1 bg-primary-100 text-primary-700 text-xs rounded-full font-medium">
+          <h3 className="text-lg font-semibold text-gray-800 flex-1">{title}</h3>
+          <span className="ml-3 flex-shrink-0 px-2 py-1 bg-primary-100 text-primary-700 text-xs rounded-full font-medium self-start">
             {status}
           </span>
         </div>

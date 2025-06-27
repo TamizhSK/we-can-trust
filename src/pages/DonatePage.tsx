@@ -4,6 +4,10 @@ import { CreditCard, Heart, Users, GraduationCap, Lightbulb, Download, CheckCirc
 import Button from '../components/Button';
 import Card from '../components/Card';
 
+
+
+
+
 // Razorpay types
 declare global {
   interface Window {
@@ -18,6 +22,11 @@ interface RazorpayResponse {
 }
 
 const DonatePage = () => {
+
+    useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const [amount, setAmount] = useState<number | ''>('');
   const [donorName, setDonorName] = useState<string>('');
   const [donorEmail, setDonorEmail] = useState<string>('');

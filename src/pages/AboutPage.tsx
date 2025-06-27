@@ -1,8 +1,14 @@
 import { motion } from 'framer-motion';
 import { Award, Briefcase, GraduationCap, Heart, Eye, BookOpen, HandHeart } from 'lucide-react';
 import Card from '../components/Card';
+import { useEffect } from 'react';
 
 const AboutPage = () => {
+
+    useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="pb-16">
       {/* Creative Header */}
@@ -147,7 +153,7 @@ const AboutPage = () => {
                 className="order-2 md:order-1"
               >
               
-                <h3 className="text-2xl px-6 sm:px font-display font-semibold text-gray-900 mb-4">
+                <h3 className="text-2xl px-6 sm:px-0 font-display font-semibold text-gray-900 mb-4">
                   Mr. S. Chezhiyan
                 </h3>
                 
