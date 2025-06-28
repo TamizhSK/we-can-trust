@@ -33,8 +33,9 @@ const app = express();
 // CORS
 
 const allowedOrigins = [
-  'https://we-can-trust-1-rho.vercel.app',
-  'https://we-can-trust-q78hiu7y0-dharshan-s-projects-bf4a856e.vercel.app',
+  'https://we-can-trust.org',
+  'https://we-can-trust-2u8hnmbqi-mercy-trusts-projects.vercel.app/',
+  'https://we-can-trust-mercy-trusts-projects.vercel.app/',
   'http://localhost:5173' // add this too for local testing
 ];
 
