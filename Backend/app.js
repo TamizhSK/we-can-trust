@@ -31,14 +31,14 @@ const emailService = new EmailService();
 const app = express();
 app.use(cors({
   origin: 'https://www.we-can-trust.org', // allow your frontend domain
-  methods: ['GET', 'POST',], 
+  methods: ['GET', 'POST'], 
   credentials: true, // if you send cookies/auth
 }));
 // CORS
 
 const allowedOrigins = [
-  'http://localhost:5173',
-  'https://www.we-can-trust.org/' // add this too for local testing
+  'https://www.we-can-trust.org/',
+  'https://we-can-trust-mercy-trusts-projects.vercel.app', // add this too for local testing
 ];
 
 app.use(cors({
