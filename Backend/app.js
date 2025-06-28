@@ -29,7 +29,11 @@ const receiptGenerator = new ReceiptGenerator();
 const emailService = new EmailService();
 
 const app = express();
-
+app.use(cors({
+  origin: 'https://www.we-can-trust.org', // allow your frontend domain
+  methods: ['GET', 'POST',], 
+  credentials: true, // if you send cookies/auth
+}));
 // CORS
 
 const allowedOrigins = [
