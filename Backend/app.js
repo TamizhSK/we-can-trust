@@ -29,19 +29,12 @@ const receiptGenerator = new ReceiptGenerator();
 const emailService = new EmailService();
 
 const app = express();
-app.use(cors({
-  origin: 'https://www.we-can-trust.org', // allow your frontend domain
-  methods: ['GET', 'POST'], 
-  credentials: true, // if you send cookies/auth
-}));
-// CORS
-
 const allowedOrigins = [
-  'https://we-can-trust-mercy-trusts-projects.vercel.app'
-  'https://www.we-can-trust.org/' // add this too for local testing
+  'https://we-can-trust-mercy-trusts-projects.vercel.app',
+  'https://www.we-can-trust.org'
 ];
 
-app.use(cors({
+const corsOptions = {
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
@@ -49,8 +42,11 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
+  methods: ['GET', 'POST'],
   credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
 
 
 // Body parsing middleware
