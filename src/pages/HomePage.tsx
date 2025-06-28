@@ -16,8 +16,17 @@ import Card from '../components/Card';
 import Button from '../components/Button';
 import TestimonialCard from '../components/TestimonialCard';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+
+
 
 const HomePage = () => {
+
+
+    useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div>
       <Hero />

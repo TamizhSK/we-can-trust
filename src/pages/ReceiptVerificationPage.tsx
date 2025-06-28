@@ -3,6 +3,10 @@ import { motion } from 'framer-motion';
 import { Search, CheckCircle, XCircle, FileText, Download } from 'lucide-react';
 import Button from '../components/Button';
 import Card from '../components/Card';
+import { useEffect } from 'react';
+
+
+
 
 interface ReceiptDetails {
   receiptNumber: string;
@@ -17,6 +21,11 @@ interface ReceiptDetails {
 }
 
 const ReceiptVerificationPage = () => {
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   const [receiptNumber, setReceiptNumber] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [verificationResult, setVerificationResult] = useState<{
