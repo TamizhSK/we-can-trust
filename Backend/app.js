@@ -37,8 +37,8 @@ app.use(cors({
 // CORS
 
 const allowedOrigins = [
-  'https://www.we-can-trust.org/',
-  'https://we-can-trust-mercy-trusts-projects.vercel.app', // add this too for local testing
+  'https://we-can-trust-mercy-trusts-projects.vercel.app'
+  'https://www.we-can-trust.org/' // add this too for local testing
 ];
 
 app.use(cors({
