@@ -4,9 +4,10 @@ const crypto = require('crypto');
 const CryptoJS = require('crypto-js');
 const path = require('path');
 const fs = require('fs').promises;
+const { GridFSBucket } = require('mongodb');
 
 class ReceiptGenerator {
-  constructor() {
+  constructor(receiptsConn) {
     this.organizationDetails = {
       name: process.env.ORG_NAME || "We Can Trust",
       registrationNumber: process.env.ORG_REGISTRATION_NUMBER || "NGO/REG/2024/001",
@@ -18,6 +19,9 @@ class ReceiptGenerator {
       section80G: process.env.ORG_80G_CERTIFICATE || "80G/2024/001",
       logoUrl: "/public/logo.svg" // Path to organization logo
     };
+    this.bucket = new GridFSBucket(receiptsConn.db(), {
+      bucketName: 'receipts'
+    });
   }
 
   // Generate a cryptographic hash for receipt verification
@@ -344,7 +348,7 @@ class ReceiptGenerator {
   }
 
   // Generate PDF receipt
-  async generateReceipt(donation, baseUrl = 'http://localhost:8000') {
+  async generateReceipt(donation, baseUrl) {
     try {
       // Generate verification hash
       const verificationHash = this.generateReceiptHash(donation);
@@ -357,14 +361,6 @@ class ReceiptGenerator {
       
       // Generate HTML
       const html = this.generateReceiptHTML(donation, qrCodeDataUrl, verificationHash);
-      
-      // Create receipts directory if it doesn't exist
-      const receiptsDir = path.join(__dirname, '../receipts');
-      try {
-        await fs.access(receiptsDir);
-      } catch {
-        await fs.mkdir(receiptsDir, { recursive: true });
-      }
       
       // Generate PDF using Puppeteer
       const browser = await puppeteer.launch({
@@ -379,10 +375,9 @@ class ReceiptGenerator {
       });
       
       const fileName = `receipt-${donation.receiptNumber}.pdf`;
-      const filePath = path.join(receiptsDir, fileName);
       
-      await page.pdf({
-        path: filePath,
+      // Generate PDF buffer (not saving to local file)
+      const pdfBuffer = await page.pdf({
         format: 'A4',
         printBackground: true,
         margin: {
@@ -394,13 +389,38 @@ class ReceiptGenerator {
       });
       
       await browser.close();
+
+      // Upload PDF to GridFS
+      const uploadStream = this.bucket.openUploadStream(fileName, {
+        metadata: {
+          donationId: donation._id,
+          receiptNumber: donation.receiptNumber,
+          uploadedAt: new Date(),
+          verificationHash: verificationHash
+        }
+      });
+
+      // Create a promise to handle the upload
+      const uploadResult = await new Promise((resolve, reject) => {
+        uploadStream.on('finish', () => {
+          resolve({
+            fileId: uploadStream.id,
+            fileName: fileName
+          });
+        });
+        uploadStream.on('error', reject);
+        
+        // Write the PDF buffer to GridFS
+        uploadStream.end(pdfBuffer);
+      });
       
       return {
         success: true,
-        filePath,
-        fileName,
+        fileId: uploadResult.fileId,
+        fileName: uploadResult.fileName,
         verificationHash,
-        verificationUrl
+        verificationUrl,
+        filePath: null // No local file path since we're using GridFS
       };
       
     } catch (error) {

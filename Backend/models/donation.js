@@ -22,7 +22,7 @@ const DonationSchema = new Schema({
   receiptNumber: { type: String, unique: true, sparse: true }, // Generated for completed donations
   receiptGenerated: { type: Boolean, default: false },
   receiptGeneratedAt: { type: Date },
-  receiptPath: { type: String }, // Path to generated receipt PDF
+  receiptFileId: { type: Schema.Types.ObjectId, index: true }, // ID of the receipt file in GridFS
   receiptHash: { type: String }, // SHA256 hash for verification
   taxExemptionCertificate: { type: String }, // 80G certificate details
   financialYear: { type: String }, // e.g., "2024-25"

@@ -14,6 +14,13 @@ const EmailService = require("./utils/emailService");
 require("dotenv").config();
 mongoose.connect(process.env.MONGO_URI);
 
+const receiptsConnection = mongoose.createConnection(process.env.MONGO_RECEIPT_URI);
+
+const receiptsConn = receiptsConnection.getClient();
+
+const { GridFSBucket } = require('mongodb');
+const receiptsBucket = new GridFSBucket(receiptsConn.db(), { bucketName: 'receipts' });
+
 // Models
 const Donation = require("./models/donation").default;
 const Contact = require("./models/contact");
@@ -25,29 +32,16 @@ const razorpay = new Razorpay({
 });
 
 // Initialize receipt generator and email service
-const receiptGenerator = new ReceiptGenerator();
+const receiptGenerator = new ReceiptGenerator(receiptsConn);
 const emailService = new EmailService();
 
 const app = express();
-const allowedOrigins = [
-  'https://we-can-trust-mercy-trusts-projects.vercel.app',
-  'https://www.we-can-trust.org'
-];
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'POST'],
+// CORS
+app.use(cors({
+  origin: process.env.FRONTEND_URI, // Default Vite port
   credentials: true
-};
-
-app.use(cors(corsOptions));
-
+}));
 
 // Body parsing middleware
 app.use(express.urlencoded({ extended: false }));
@@ -312,15 +306,16 @@ async function generateReceiptAsync(donation, host) {
       await Donation.findByIdAndUpdate(donation._id, {
         receiptGenerated: true,
         receiptGeneratedAt: new Date(),
-        receiptPath: receiptResult.filePath,
+        receiptFileId: receiptResult.fileId,
         receiptHash: receiptResult.verificationHash
       });
 
       // Send receipt via email
       const emailResult = await emailService.sendReceiptEmail(
         donation, 
-        receiptResult.filePath, 
-        receiptGenerator.organizationDetails
+        receiptResult.fileId, 
+        receiptGenerator.organizationDetails,
+        receiptsBucket
       );
 
       if (emailResult.success) {
@@ -426,22 +421,14 @@ app.get("/api/receipts/download/:receiptNumber", async (req, res) => {
       });
     }
     
-    // Check if file exists
-    const fs = require('fs');
-    if (!fs.existsSync(donation.receiptPath)) {
-      return res.status(404).json({
-        success: false,
-        message: "Receipt file not found"
-      });
-    }
-    
     // Set headers for PDF download
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="Receipt-${receiptNumber}.pdf"`);
     
-    // Stream the file
-    const fileStream = fs.createReadStream(donation.receiptPath);
-    fileStream.pipe(res);
+    // Stream the file from GridFS
+    receiptsBucket.openDownloadStream(donation.receiptFileId).pipe(res)
+      .on('error', () => res.status(404).end())
+      .on('finish', () => res.end());
     
   } catch (error) {
     console.error("Error downloading receipt:", error);
@@ -533,7 +520,7 @@ app.post("/api/receipts/regenerate/:donationId", async (req, res) => {
       await Donation.findByIdAndUpdate(donation._id, {
         receiptGenerated: true,
         receiptGeneratedAt: new Date(),
-        receiptPath: receiptResult.filePath,
+        receiptFileId: receiptResult.fileId,
         receiptHash: receiptResult.verificationHash
       });
 
@@ -541,8 +528,9 @@ app.post("/api/receipts/regenerate/:donationId", async (req, res) => {
       if (req.body.sendEmail) {
         const emailResult = await emailService.sendReceiptEmail(
           donation, 
-          receiptResult.filePath, 
-          receiptGenerator.organizationDetails
+          receiptResult.fileId, 
+          receiptGenerator.organizationDetails,
+          receiptsBucket
         );
         
         return res.json({
@@ -593,13 +581,11 @@ app.post("/api/receipts/resend/:receiptNumber", async (req, res) => {
         message: "Receipt not found"
       });
     }
-    
-    // Check if receipt file exists
-    const fs = require('fs');
-    if (!fs.existsSync(donation.receiptPath)) {
-      return res.status(404).json({
-        success: false,
-        message: "Receipt file not found. Please regenerate receipt."
+
+    if (!donation.receiptFileId) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "No receipt file stored" 
       });
     }
     
@@ -611,8 +597,9 @@ app.post("/api/receipts/resend/:receiptNumber", async (req, res) => {
     
     const emailResult = await emailService.sendReceiptEmail(
       donationForEmail, 
-      donation.receiptPath, 
-      receiptGenerator.organizationDetails
+      donation.receiptFileId, 
+      receiptGenerator.organizationDetails,
+      receiptsBucket
     );
     
     if (emailResult.success) {

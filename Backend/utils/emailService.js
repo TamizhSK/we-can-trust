@@ -195,10 +195,40 @@ class EmailService {
     `;
   }
 
-  // Send receipt email with PDF attachment
-  async sendReceiptEmail(donation, receiptPath, organizationDetails) {
+  // Send receipt email with PDF attachment from GridFS
+  async sendReceiptEmail(donation, receiptFileId, organizationDetails, gridFSBucket) {
     try {
       const emailHTML = this.generateReceiptEmailHTML(donation, organizationDetails);
+      
+      // Get PDF content from GridFS if receiptFileId is provided
+      let attachments = [];
+      
+      if (receiptFileId && gridFSBucket) {
+        // Stream PDF from GridFS
+        const downloadStream = gridFSBucket.openDownloadStream(receiptFileId);
+        const chunks = [];
+        
+        await new Promise((resolve, reject) => {
+          downloadStream.on('data', (chunk) => chunks.push(chunk));
+          downloadStream.on('end', () => resolve());
+          downloadStream.on('error', reject);
+        });
+        
+        const pdfBuffer = Buffer.concat(chunks);
+        
+        attachments.push({
+          filename: `Receipt-${donation.receiptNumber}.pdf`,
+          content: pdfBuffer,
+          contentType: 'application/pdf'
+        });
+      } else if (typeof receiptFileId === 'string') {
+        // Fallback to file path for backward compatibility
+        attachments.push({
+          filename: `Receipt-${donation.receiptNumber}.pdf`,
+          path: receiptFileId,
+          contentType: 'application/pdf'
+        });
+      }
       
       const mailOptions = {
         from: {
@@ -208,13 +238,7 @@ class EmailService {
         to: donation.donorEmail,
         subject: `Thank you for your donation - Receipt #${donation.receiptNumber}`,
         html: emailHTML,
-        attachments: [
-          {
-            filename: `Receipt-${donation.receiptNumber}.pdf`,
-            path: receiptPath,
-            contentType: 'application/pdf'
-          }
-        ]
+        attachments: attachments
       };
 
       const result = await this.transporter.sendMail(mailOptions);
