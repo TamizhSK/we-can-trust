@@ -12,9 +12,14 @@ const ReceiptGenerator = require("./utils/receiptGenerator");
 const EmailService = require("./utils/emailService");
 
 require("dotenv").config();
-mongoose.connect(process.env.MONGO_URI);
 
-const receiptsConnection = mongoose.createConnection(process.env.MONGO_RECEIPT_URI);
+const mongoOpts = {
+    serverApi: { version: '1' },
+}
+
+mongoose.connect(process.env.MONGO_URI, mongoOpts);
+
+const receiptsConnection = mongoose.createConnection(process.env.MONGO_RECEIPT_URI, mongoOpts);
 
 const receiptsConn = receiptsConnection.getClient();
 
