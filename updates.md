@@ -1,6 +1,3 @@
-# Changelog
+## Notes
 
-## [1.0.1] - 2025-09-29
-
-### Changed
-- Minor improvements
+Added new insights and improvements.
